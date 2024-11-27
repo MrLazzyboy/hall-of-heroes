@@ -1,23 +1,19 @@
 {
   "name": "hall-of-heroes",
+  "version": "1.0.0",
+  "main": "index.js",
   "private": true,
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "dev:frontend": "npm --workspace=apps/frontend run dev",
+    "dev:backend": "npm --workspace=apps/backend run dev",
+    "dev": "npm run dev:frontend & npm run dev:backend",
+    "build": "npm run build:frontend && npm run build:backend"
   },
-  "devDependencies": {
-    "prettier": "^3.2.5",
-    "turbo": "^2.3.3",
-    "typescript": "5.5.4"
-  },
-  "engines": {
-    "node": ">=18"
-  },
-  "packageManager": "npm@10.8.2",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "apps/*"
   ]
 }
