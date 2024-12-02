@@ -1,0 +1,281 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Events API",
+      "version": "1.0.0",
+      "description": "API для управления событиями: просмотр, создание, редактирование, приглашение участников и отправка на модерацию."
+    },
+    "paths": {
+      "/events": {
+        "get": {
+          "summary": "Список всех событий",
+          "parameters": [
+            {
+              "name": "page",
+              "in": "query",
+              "schema": { "type": "integer", "default": 1 },
+              "description": "Номер страницы для пагинации"
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "schema": { "type": "integer", "default": 10 },
+              "description": "Количество событий на странице"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Успешное получение списка событий",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "events": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": { "type": "string" },
+                            "title": { "type": "string" },
+                            "description": { "type": "string" },
+                            "date": { "type": "string", "format": "date-time" },
+                            "status": { "type": "string", "enum": ["active", "archived", "pending"] }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "summary": "Создание нового события",
+          "security": [
+            { "bearerAuth": [] }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "title": { "type": "string" },
+                    "description": { "type": "string" },
+                    "date": { "type": "string", "format": "date-time" },
+                    "invitations": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "description": "Массив идентификаторов пользователей для приглашения"
+                    }
+                  },
+                  "required": ["title", "description", "date"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Событие успешно создано",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string" },
+                      "message": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/events/{id}": {
+        "get": {
+          "summary": "Получение информации о конкретном событии",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" },
+              "description": "Идентификатор события"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Успешное получение информации о событии",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string" },
+                      "title": { "type": "string" },
+                      "description": { "type": "string" },
+                      "date": { "type": "string", "format": "date-time" },
+                      "status": { "type": "string" },
+                      "creator": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "username": { "type": "string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "put": {
+          "summary": "Редактирование созданного события",
+          "security": [
+            { "bearerAuth": [] }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "title": { "type": "string" },
+                    "description": { "type": "string" },
+                    "date": { "type": "string", "format": "date-time" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Событие успешно обновлено",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+            "summary": "Удаление события",
+            "security": [
+              { "bearerAuth": [] }
+            ],
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": { "type": "string" },
+                "description": "Идентификатор события"
+              }
+            ],
+            "responses": {
+              "200": { "description": "Событие успешно удалено" },
+              "403": { "description": "Недостаточно прав для удаления" }
+            }
+          }
+      },
+      "/users/{id}/events": {
+        "get": {
+          "summary": "Список событий пользователя",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" },
+              "description": "Идентификатор пользователя"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Успешное получение списка событий",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "events": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": { "type": "string" },
+                            "title": { "type": "string" },
+                            "date": { "type": "string", "format": "date-time" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/events/{id}/invitation-response": {
+        "post": {
+          "summary": "Ответ на приглашение",
+          "security": [
+            { "bearerAuth": [] }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" },
+              "description": "Идентификатор события"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["accept", "decline"],
+                      "description": "Принять или отклонить приглашение"
+                    }
+                  },
+                  "required": ["status"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": { "description": "Ответ на приглашение успешно сохранён" }
+          }
+        }
+      }
+    },
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    }
+  }
+  

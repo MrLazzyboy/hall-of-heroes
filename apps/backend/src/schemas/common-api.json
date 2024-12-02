@@ -1,0 +1,108 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Public API",
+      "version": "1.0.0",
+      "description": "API с доступом для всех пользователей: новости и фильтры событий."
+    },
+    "paths": {
+      "/news": {
+        "get": {
+          "summary": "Получение ленты новостей",
+          "description": "Возвращает список новостей с возможностью фильтрации и сортировки по дате.",
+          "parameters": [
+            {
+              "name": "page",
+              "in": "query",
+              "schema": { "type": "integer", "default": 1 },
+              "description": "Номер страницы для пагинации."
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "schema": { "type": "integer", "default": 10 },
+              "description": "Количество новостей на странице."
+            },
+            {
+              "name": "sort",
+              "in": "query",
+              "schema": {
+                "type": "string",
+                "enum": ["asc", "desc"],
+                "default": "desc"
+              },
+              "description": "Сортировка новостей по дате публикации."
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Список новостей успешно получен.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "news": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": { "type": "string", "description": "Идентификатор новости" },
+                            "title": { "type": "string", "description": "Заголовок новости" },
+                            "content": { "type": "string", "description": "Текст новости" },
+                            "publishDate": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "Дата публикации"
+                            }
+                          }
+                        }
+                      },
+                      "pagination": {
+                        "type": "object",
+                        "properties": {
+                          "page": { "type": "integer", "description": "Текущая страница" },
+                          "limit": { "type": "integer", "description": "Количество на странице" },
+                          "total": { "type": "integer", "description": "Общее количество новостей" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/filters": {
+        "get": {
+          "summary": "Получение списка фильтров для событий",
+          "description": "Возвращает список доступных фильтров, которые могут быть использованы для поиска событий.",
+          "responses": {
+            "200": {
+              "description": "Список фильтров успешно получен.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "string", "description": "Идентификатор фильтра" },
+                        "name": { "type": "string", "description": "Название фильтра" },
+                        "options": {
+                          "type": "array",
+                          "items": { "type": "string", "description": "Возможное значение фильтра" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  

@@ -1,0 +1,336 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Admin API",
+      "version": "1.0.0",
+      "description": "API для управления действиями администратора: модерация игр, управление пользователями, фильтрами и новостями."
+    },
+    "paths": {
+      "/admin/events/{id}/approve": {
+        "post": {
+          "summary": "Утверждение игры",
+          "security": [
+            { "bearerAuth": [] }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" },
+              "description": "Идентификатор события"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Событие успешно утверждено",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/admin/events/{id}/reject": {
+        "post": {
+          "summary": "Отклонение игры",
+          "security": [
+            { "bearerAuth": [] }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" },
+              "description": "Идентификатор события"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "reason": { "type": "string", "description": "Причина отклонения события" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Событие успешно отклонено",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/admin/users/{id}/block": {
+        "post": {
+          "summary": "Блокировка пользователя",
+          "security": [
+            { "bearerAuth": [] }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" },
+              "description": "Идентификатор пользователя"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "reason": { "type": "string", "description": "Причина блокировки" },
+                    "duration": { "type": "string", "description": "Длительность блокировки (например, '7d', 'permanent')" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Пользователь успешно заблокирован",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/admin/filters": {
+        "post": {
+          "summary": "Добавление нового параметра фильтрации событий",
+          "security": [
+            { "bearerAuth": [] }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string", "description": "Название параметра" },
+                    "options": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "description": "Список значений параметра"
+                    }
+                  },
+                  "required": ["name", "options"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Параметр успешно добавлен",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/admin/news": {
+        "post": {
+          "summary": "Создание новой новости",
+          "security": [
+            { "bearerAuth": [] }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "title": { "type": "string", "description": "Заголовок новости" },
+                    "content": { "type": "string", "description": "Текст новости" },
+                    "publishDate": { "type": "string", "format": "date-time", "description": "Дата публикации" }
+                  },
+                  "required": ["title", "content"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Новость успешно создана",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": { "type": "string" },
+                      "newsId": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/admin/news/{id}": {
+        "put": {
+          "summary": "Редактирование новости",
+          "security": [
+            { "bearerAuth": [] }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" },
+              "description": "Идентификатор новости"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "title": { "type": "string", "description": "Новый заголовок новости" },
+                    "content": { "type": "string", "description": "Обновленный текст новости" },
+                    "publishDate": { "type": "string", "format": "date-time", "description": "Обновленная дата публикации" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Новость успешно обновлена",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+            "summary": "Удаление новости",
+            "security": [
+              { "bearerAuth": [] }
+            ],
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": { "type": "string" },
+                "description": "Идентификатор новости"
+              }
+            ],
+            "responses": {
+              "200": { "description": "Новость успешно удалена" }
+            }
+          }
+      },
+      "/admin/users/{id}/unblock": {
+        "post": {
+          "summary": "Разблокировка пользователя",
+          "security": [
+            { "bearerAuth": [] }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" },
+              "description": "Идентификатор пользователя"
+            }
+          ],
+          "responses": {
+            "200": { "description": "Пользователь успешно разблокирован" }
+          }
+        }
+      },
+      "/admin/statistics": {
+        "get": {
+          "summary": "Просмотр статистики",
+          "security": [
+            { "bearerAuth": [] }
+          ],
+          "responses": {
+            "200": {
+              "description": "Статистика успешно получена",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "totalUsers": { "type": "integer", "description": "Общее количество пользователей" },
+                      "blockedUsers": { "type": "integer", "description": "Количество заблокированных пользователей" },
+                      "pendingEvents": { "type": "integer", "description": "Количество событий на модерации" },
+                      "approvedEvents": { "type": "integer", "description": "Количество одобренных событий" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    }
+  }
+  
