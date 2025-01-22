@@ -8,6 +8,7 @@ import {
   forgotPasswordLimiter,
   refreshLimiter,
 } from './middlewares/rateLimiters';
+import commonRoutes from './routes/common';
 
 dotenv.config();
 
@@ -21,6 +22,8 @@ app.use('/auth/login', loginLimiter, authRoutes);
 app.use('/auth/register', registerLimiter, authRoutes);
 app.use('/auth/forgot-password', forgotPasswordLimiter, authRoutes);
 app.use('/auth/refresh', refreshLimiter, authRoutes);
+
+app.use('/common', commonRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI || 'mongodb://localhost:27017/myapp')
