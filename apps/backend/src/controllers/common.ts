@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { NewsModel, FilterModel } from '../model/common-api-model';
+import { NewsModel, FilterModel } from '../models/common';
 import { FilterQuery } from 'mongoose';
 
 const router = express.Router();
