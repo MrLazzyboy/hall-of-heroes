@@ -1,27 +1,36 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../types/auth';
 import User from '../models/auth';
+import { ApiError } from '../middlewares/errorHandler';
 
 export const isAdmin = async (
   req: AuthRequest,
   res: Response,
   next: NextFunction
-) => {
-  const user = await User.findById(req.user?.userId);
-  if (!user || user.role !== 'Admin') {
-    return res.status(403).json({ error: 'Доступ запрещен' });
+): Promise<void> => {
+  try {
+    const user = await User.findById(req.user?.userId);
+    if (!user || user.role !== 'Admin') {
+      throw new ApiError(403, 'Доступ запрещен');
+    }
+    next();
+  } catch (error) {
+    next(error);
   }
-  next();
 };
 
 export const isMaster = async (
   req: AuthRequest,
   res: Response,
   next: NextFunction
-) => {
-  const user = await User.findById(req.user?.userId);
-  if (!user || !user.roles.includes('Master')) {
-    return res.status(403).json({ error: 'Доступ запрещен' });
+): Promise<void> => {
+  try {
+    const user = await User.findById(req.user?.userId);
+    if (!user || !user.roles.includes('Master')) {
+      throw new ApiError(403, 'Доступ запрещен');
+    }
+    next();
+  } catch (error) {
+    next(error);
   }
-  next();
 };

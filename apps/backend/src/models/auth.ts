@@ -7,6 +7,8 @@ export interface User extends Document {
   role: 'Player' | 'Admin'; // Основная роль
   roles: string[]; // Дополнительные роли (например, Master)
   createdAt: Date;
+  isBlocked: boolean;
+  blockDuration: Date;
 }
 
 const UserSchema = new Schema<User>({

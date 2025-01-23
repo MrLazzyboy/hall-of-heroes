@@ -14,6 +14,7 @@ import {
 } from './middlewares/rateLimiters';
 import { errorHandler } from './middlewares/errorHandler';
 import commonRoutes from './routes/common';
+import adminRoutes from './routes/admin';
 
 dotenv.config();
 
@@ -47,6 +48,9 @@ app.use(
 
 // Публичные
 app.use('/common', commonRoutes);
+
+// Админские апи
+app.use('/admin', adminRoutes);
 
 // Обработчик ошибок
 app.use(errorHandler);
