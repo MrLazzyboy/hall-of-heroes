@@ -13,26 +13,44 @@ export const register = async (
   next: NextFunction
 ) => {
   try {
-    const { username, email, password } = req.body;
-    if (!username || !email || !password) {
-      throw new ApiError(400, 'Все поля обязательны');
+    const { username, email, phone, password, name, bio, socialLink } =
+      req.body;
+
+    if (!username || !email || !phone || !password) {
+      throw new ApiError(400, 'Логин, email, телефон и пароль обязательны');
     }
-    const existingUser = await User.findOne({ email });
+
+    // Проверяем уникальность обязательных полей
+    const existingUser = await User.findOne({
+      $or: [{ username }, { email }, { phone }],
+    });
     if (existingUser) {
-      throw new ApiError(400, 'Email уже зарегистрирован');
+      throw new ApiError(400, 'Логин, email или телефон уже используются');
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
       username,
       email,
+      phone,
       password: hashedPassword,
+      name,
+      bio,
+      socialLink,
       role: 'Player',
       roles: [],
     });
     await newUser.save();
-    res
-      .status(201)
-      .json({ message: 'Пользователь зарегистрирован', userId: newUser._id });
+
+    // Автоматический логин после регистрации
+    const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, {
+      expiresIn: '7d',
+    });
+    res.status(201).json({
+      message: 'Пользователь зарегистрирован',
+      userId: newUser._id,
+      token,
+    });
   } catch (error) {
     next(error);
   }
