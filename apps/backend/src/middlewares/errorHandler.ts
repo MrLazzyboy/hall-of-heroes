@@ -16,8 +16,9 @@ export const errorHandler = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ) => {
-  console.error(`[ERROR] ${err.status || 500} - ${err.message}`);
-
+  if (process.env.NODE_ENV !== 'production') {
+    console.error(err.stack);
+  }
   res.status(err.status || 500).json({
     error: err.message || 'Внутренняя ошибка сервера',
   });

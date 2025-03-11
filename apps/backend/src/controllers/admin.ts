@@ -1,61 +1,61 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../types/auth';
-// import Event from '../models/events';
+import Event from '../models/event';
 import User from '../models/auth';
 import Filter from '../models/filters';
 import News from '../models/news';
 import AdminAction from '../models/admin';
 import { ApiError } from '../middlewares/errorHandler';
 
-// export const approveEvent = async (
-//   req: AuthRequest,
-//   res: Response,
-//   next: NextFunction
-// ): Promise<void> => {
-//   try {
-//     const { id } = req.params;
-//     const event = await Event.findById(id);
-//     if (!event) throw new ApiError(404, 'Событие не найдено');
+export const approveEvent = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const event = await Event.findById(id);
+    if (!event) throw new ApiError(404, 'Событие не найдено');
 
-//     event.status = 'approved';
-//     await event.save();
-//     await AdminAction.create({
-//       adminId: req.user?.userId,
-//       actionType: 'approve',
-//       targetId: id,
-//     });
+    event.status = 'approved';
+    await event.save();
+    await AdminAction.create({
+      adminId: req.user?.userId,
+      actionType: 'approve',
+      targetId: id,
+    });
 
-//     res.status(200).json({ message: 'Событие успешно утверждено' });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+    res.status(200).json({ message: 'Событие успешно утверждено' });
+  } catch (error) {
+    next(error);
+  }
+};
 
-// export const rejectEvent = async (
-//   req: AuthRequest,
-//   res: Response,
-//   next: NextFunction
-// ): Promise<void> => {
-//   try {
-//     const { id } = req.params;
-//     const { reason } = req.body;
-//     const event = await Event.findById(id);
-//     if (!event) throw new ApiError(404, 'Событие не найдено');
+export const rejectEvent = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
+    const event = await Event.findById(id);
+    if (!event) throw new ApiError(404, 'Событие не найдено');
 
-//     event.status = 'rejected';
-//     await event.save();
-//     await AdminAction.create({
-//       adminId: req.user?.userId,
-//       actionType: 'reject',
-//       targetId: id,
-//       reason,
-//     });
+    event.status = 'rejected';
+    await event.save();
+    await AdminAction.create({
+      adminId: req.user?.userId,
+      actionType: 'reject',
+      targetId: id,
+      reason,
+    });
 
-//     res.status(200).json({ message: 'Событие успешно отклонено' });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+    res.status(200).json({ message: 'Событие успешно отклонено' });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const blockUser = async (
   req: AuthRequest,
@@ -69,7 +69,7 @@ export const blockUser = async (
     if (!user) throw new ApiError(404, 'Пользователь не найден');
 
     user.isBlocked = true;
-    user.blockDuration = duration;
+    user.blockUntil = duration ? new Date(Date.now() + duration * 1000) : null;
     await user.save();
     await AdminAction.create({
       adminId: req.user?.userId,
@@ -187,10 +187,9 @@ export const deleteNews = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const news = await News.findById(id);
+    const news = await News.findByIdAndDelete(id);
     if (!news) throw new ApiError(404, 'Новость не найдена');
 
-    await News.findByIdAndDelete(id);
     res.status(200).json({ message: 'Новость успешно удалена' });
   } catch (error) {
     next(error);

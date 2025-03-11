@@ -6,6 +6,8 @@ import {
   createNews,
   updateNews,
   deleteNews,
+  approveEvent,
+  rejectEvent,
 } from '../controllers/admin';
 import { authMiddleware } from '../middlewares/auth';
 import { isAdmin } from '../middlewares/roles';
@@ -13,12 +15,12 @@ import { isAdmin } from '../middlewares/roles';
 const router = Router();
 
 // Роуты для управления событиями
-// router.post('/events/:id/approve', authMiddleware, isAdmin, approveEvent);
-// router.post('/events/:id/reject', authMiddleware, isAdmin, rejectEvent);
+router.post('/events/:id/approve', authMiddleware, isAdmin, approveEvent);
+router.post('/events/:id/reject', authMiddleware, isAdmin, rejectEvent);
 
 // Роуты для управления пользователями
-router.post('/users/:id/block', authMiddleware, isAdmin, blockUser);
-router.post('/users/:id/unblock', authMiddleware, isAdmin, unblockUser);
+router.patch('/users/:id/block', authMiddleware, isAdmin, blockUser);
+router.patch('/users/:id/unblock', authMiddleware, isAdmin, unblockUser);
 
 // Роут для добавления фильтра
 router.post('/filters', authMiddleware, isAdmin, addFilter);

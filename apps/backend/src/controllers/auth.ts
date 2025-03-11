@@ -5,6 +5,9 @@ import jwt from 'jsonwebtoken';
 import User from '../models/auth';
 import { ApiError } from '../middlewares/errorHandler';
 
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET не установлен в .env');
+}
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 
 export const register = async (
@@ -127,6 +130,8 @@ export const updateRole = async (
     if (role === 'Master') {
       if (!user.roles.includes('Master')) {
         user.roles.push('Master');
+      } else if (user.role !== 'Admin') {
+        throw new ApiError(403, 'Только админ может назначать Мастера');
       }
     } else {
       user.roles = user.roles.filter((r) => r !== 'Master');

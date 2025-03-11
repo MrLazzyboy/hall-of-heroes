@@ -8,7 +8,7 @@ export interface User extends Document {
   roles: string[]; // Дополнительные роли (например, Master)
   createdAt: Date;
   isBlocked: boolean;
-  blockDuration: Date;
+  blockUntil: Date | null;
 }
 
 const UserSchema = new Schema<User>({

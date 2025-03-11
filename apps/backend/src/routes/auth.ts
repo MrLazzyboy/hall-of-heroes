@@ -6,16 +6,17 @@ import {
   session,
   updateRole,
 } from '../controllers/auth';
+import { loginLimiter, registerLimiter } from '../middlewares/rateLimiters';
 import { authMiddleware } from '../middlewares/auth';
 import { isAdmin } from '../middlewares/roles';
 
 const router = Router();
 
 // Приведение функций к `RequestHandler`
-router.post('/register', register as RequestHandler);
-router.post('/login', login as RequestHandler);
-router.post(
-  '/logout',
+router.post('/register', registerLimiter, register as RequestHandler);
+router.post('/login', loginLimiter, login as RequestHandler);
+router.delete(
+  '/session',
   authMiddleware as RequestHandler,
   logout as RequestHandler
 );

@@ -11,7 +11,7 @@ export interface IFilter extends Document {
 }
 
 const FilterSchema = new Schema<IFilter>({
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
   options: [
     {
       fullName: { type: String, required: true },

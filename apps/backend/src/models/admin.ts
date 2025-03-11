@@ -21,6 +21,7 @@ const AdminActionSchema = new Schema<IAdminAction>({
       'add_filter',
       'edit_news',
       'delete_news',
+      'create_news',
     ],
   },
   targetId: { type: String, required: true },

@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../types/auth';
 import User from '../models/auth';
-import { ApiError } from '../middlewares/errorHandler';
+import { ApiError } from './errorHandler';
 
 export const isAdmin = async (
   req: AuthRequest,
@@ -10,7 +10,10 @@ export const isAdmin = async (
 ): Promise<void> => {
   try {
     const user = await User.findById(req.user?.userId);
-    if (!user || user.role !== 'Admin') {
+    if (!user) {
+      throw new ApiError(404, 'Пользователь не найден');
+    }
+    if (user.role !== 'Admin') {
       throw new ApiError(403, 'Доступ запрещен');
     }
     next();

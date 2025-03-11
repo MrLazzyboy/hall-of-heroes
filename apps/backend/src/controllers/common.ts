@@ -39,8 +39,10 @@ export const getFilters = async (
 ) => {
   try {
     const filters = await Filter.find();
-    if (!filters) {
-      throw new ApiError(404, 'Фильтры не найдены');
+    if (filters.length === 0) {
+      return res
+        .status(200)
+        .json({ message: 'Нет доступных фильтров', filters: [] });
     }
     res.status(200).json(filters);
   } catch (error) {
