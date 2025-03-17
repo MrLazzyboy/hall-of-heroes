@@ -1,0 +1,104 @@
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+}
+
+body {
+  background: #000000;
+  font-family: 'Alegreya-Regular';
+}
+
+.container {
+  max-width: 1180px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.input__group {
+  background: #1d1a1e !important;
+  padding: 15px 12px;
+  border-radius: 4px;
+  border-style: solid;
+  border-color: var(--08-unavailable-2, #545560);
+  border-width: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: border-color 0.2s ease;
+
+  i {
+    color: #545560;
+    transition: color 0.2s ease;
+  }
+
+  &:hover,
+  &:focus-within {
+    border-color: #86489c;
+
+    i {
+      color: #86489c;
+    }
+  }
+
+  input {
+    border: none !important;
+    background: none !important;
+    outline: none;
+    color: #eee0f1;
+    font-size: 20px;
+    flex-grow: 1;
+    width: 100%;
+    font-family: 'Alegreya-Regular';
+
+    &::placeholder {
+      color: #545560;
+    }
+  }
+
+
+
+
+
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px #1d1a1e inset !important;
+  -webkit-text-fill-color: #eee0f1 !important;
+  background-color: #1d1a1e !important;
+  transition: background-color 5000s ease-in-out 0s; // Скрывает изменение фона
+}
+
+
+textarea {
+  background: #1d1a1e !important;
+  padding: 15px 12px;
+  border-radius: 4px;
+  border-style: solid !important;
+  border-color: var(--08-unavailable-2, #545560) !important;
+  border-width: 1px !important;
+
+  background: none;
+  outline: none;
+  color: #86489c;
+  font-size: 20px;
+  flex-grow: 1;
+  width: 100%;
+
+  &::placeholder {
+    color: #545560;
+  }
+}
