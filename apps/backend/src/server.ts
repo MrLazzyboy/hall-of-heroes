@@ -1,24 +1,33 @@
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
 import express from 'express';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import hpp from 'hpp';
-import authRoutes from './routes/auth';
-import { errorHandler } from './middlewares/errorHandler';
-import commonRoutes from './routes/common';
-import userRoutes from './routes/user';
-import eventsRoutes from './routes/events';
-import adminRoutes from './routes/admin';
-
-dotenv.config();
+import authRoutes from './routes/auth.ts';
+import { errorHandler } from './middlewares/errorHandler.ts';
+import commonRoutes from './routes/common.ts';
+import userRoutes from './routes/user.ts';
+import eventsRoutes from './routes/events.ts';
+import adminRoutes from './routes/admin.ts';
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 app.use(helmet());
 app.use(hpp());
+
+// todo поправить если будут проблемы с корсами
+// const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['*'];
 app.use(
   cors({
     origin: '*', // Разрешить запросы со всех доменов

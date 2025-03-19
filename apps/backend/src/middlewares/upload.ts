@@ -1,13 +1,14 @@
+import dotenv from 'dotenv';
 import multer from 'multer';
-import path from 'path';
 import fs from 'fs';
 
-const uploadDir = path.join(__dirname, '../uploads');
+dotenv.config();
+
+const uploadDir = process.env.UPLOADS_PATH || 'uploads/';
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Настройка хранилища файлов
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, uploadDir);
@@ -17,5 +18,4 @@ const storage = multer.diskStorage({
   },
 });
 
-// Инициализация Multer
 export const upload = multer({ storage });

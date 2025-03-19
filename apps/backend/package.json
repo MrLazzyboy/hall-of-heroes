@@ -1,16 +1,16 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.ts",
   "type": "module",
   "scripts": {
-    "dev": "ts-node src/main.ts",
+    "dev": "npx tsx src/server.ts",
     "build": "tsc",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "keywords": [],
-  "author": "",
+  "author": "Andrei Gorincioi",
   "license": "ISC",
   "description": "",
   "devDependencies": {
@@ -30,6 +30,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "prettier": "^3.4.2",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.3",
     "typescript": "^5.7.2"
   },
   "dependencies": {

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import News from '../models/news';
-import Filter from '../models/filters';
-import { ApiError } from '../middlewares/errorHandler';
+import News from '../models/news.ts';
+import Filter from '../models/filters.ts';
+import { ApiError } from '../middlewares/errorHandler.ts';
 
 export const getNews = async (
   req: Request,
@@ -40,9 +40,10 @@ export const getFilters = async (
   try {
     const filters = await Filter.find();
     if (filters.length === 0) {
-      return res
+      res
         .status(200)
         .json({ message: 'Нет доступных фильтров', filters: [] });
+      return;
     }
     res.status(200).json(filters);
   } catch (error) {

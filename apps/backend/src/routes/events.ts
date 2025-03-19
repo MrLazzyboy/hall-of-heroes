@@ -7,8 +7,8 @@ import {
   deleteEvent,
   getUserEvents,
   respondToInvitation,
-} from '../controllers/events';
-import { authMiddleware } from '../middlewares/auth';
+} from '../controllers/events.ts';
+import { authMiddleware } from '../middlewares/auth.ts';
 
 const router = Router();
 

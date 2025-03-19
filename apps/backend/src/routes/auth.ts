@@ -5,10 +5,10 @@ import {
   logout,
   session,
   updateRole,
-} from '../controllers/auth';
-import { loginLimiter, registerLimiter } from '../middlewares/rateLimiters';
-import { authMiddleware } from '../middlewares/auth';
-import { isAdmin } from '../middlewares/roles';
+} from '../controllers/auth.ts';
+import { loginLimiter, registerLimiter } from '../middlewares/rateLimiters.ts';
+import { authMiddleware } from '../middlewares/auth.ts';
+import { isAdmin } from '../middlewares/roles.ts';
 
 const router = Router();
 

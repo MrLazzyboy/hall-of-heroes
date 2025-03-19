@@ -25,7 +25,7 @@ const UserSchema = new Schema<IUser>({
     bio: { type: String, default: '' },
   },
   notifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
-  events: [{ type: Schema.Types.ObjectId, ref: 'Event' }],
 });
 
-export default mongoose.model<IUser>('User', UserSchema);
+export default mongoose.models.User ||
+  mongoose.model<IUser>('User', UserSchema);

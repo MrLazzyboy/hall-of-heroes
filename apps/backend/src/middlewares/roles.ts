@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
-import { AuthRequest } from '../types/auth';
-import User from '../models/auth';
-import { ApiError } from './errorHandler';
+import { AuthRequest } from '../types/auth.ts';
+import User from '../models/auth.ts';
+import { ApiError } from './errorHandler.ts';
 
 export const isAdmin = async (
   req: AuthRequest,

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getNews, getFilters } from '../controllers/common';
+import { getNews, getFilters } from '../controllers/common.ts';
 
 const router = Router();
 

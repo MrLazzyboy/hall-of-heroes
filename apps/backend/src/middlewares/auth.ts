@@ -1,8 +1,8 @@
 import { Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
-import { AuthRequest } from '../types/auth';
-import { ApiError } from './errorHandler';
+import { AuthRequest } from '../types/auth.ts';
+import { ApiError } from './errorHandler.ts';
 
 if (!process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET не установлен в .env');

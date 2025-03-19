@@ -1,9 +1,18 @@
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+
 import { Response, NextFunction } from 'express';
-import { AuthRequest } from '../types/auth';
+import { AuthRequest } from '../types/auth.ts';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User from '../models/auth';
-import { ApiError } from '../middlewares/errorHandler';
+import User from '../models/auth.ts';
+import { ApiError } from '../middlewares/errorHandler.ts';
 
 if (!process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET не установлен в .env');

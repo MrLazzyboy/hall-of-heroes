@@ -8,9 +8,9 @@ import {
   deleteNews,
   approveEvent,
   rejectEvent,
-} from '../controllers/admin';
-import { authMiddleware } from '../middlewares/auth';
-import { isAdmin } from '../middlewares/roles';
+} from '../controllers/admin.ts';
+import { authMiddleware } from '../middlewares/auth.ts';
+import { isAdmin } from '../middlewares/roles.ts';
 
 const router = Router();
 

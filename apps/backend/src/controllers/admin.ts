@@ -1,11 +1,11 @@
 import { Response, NextFunction } from 'express';
-import { AuthRequest } from '../types/auth';
-import Event from '../models/event';
-import User from '../models/auth';
-import Filter from '../models/filters';
-import News from '../models/news';
-import AdminAction from '../models/admin';
-import { ApiError } from '../middlewares/errorHandler';
+import { AuthRequest } from '../types/auth.ts';
+import Event from '../models/event.ts';
+import User from '../models/auth.ts';
+import Filter from '../models/filters.ts';
+import News from '../models/news.ts';
+import AdminAction from '../models/admin.ts';
+import { ApiError } from '../middlewares/errorHandler.ts';
 
 export const approveEvent = async (
   req: AuthRequest,

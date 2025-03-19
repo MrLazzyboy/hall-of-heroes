@@ -1,8 +1,8 @@
 import { Response, NextFunction } from 'express';
-import { AuthRequest } from '../types/auth';
-import User from '../models/user';
-import Notification from '../models/notification';
-import { ApiError } from '../middlewares/errorHandler';
+import { AuthRequest } from '../types/auth.ts';
+import User from '../models/user.ts';
+import Notification from '../models/notification.ts';
+import { ApiError } from '../middlewares/errorHandler.ts';
 
 export const getCurrentUser = async (
   req: AuthRequest,

@@ -6,9 +6,9 @@ import {
   getUserById,
   getUserNotifications,
   uploadAvatar,
-} from '../controllers/user';
-import { authMiddleware } from '../middlewares/auth';
-import { upload } from '../middlewares/upload';
+} from '../controllers/user.ts';
+import { authMiddleware } from '../middlewares/auth.ts';
+import { upload } from '../middlewares/upload.ts';
 
 const router = Router();
 

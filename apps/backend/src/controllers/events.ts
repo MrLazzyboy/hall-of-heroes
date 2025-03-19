@@ -1,8 +1,8 @@
 import { Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
-import { AuthRequest } from '../types/auth';
-import Event from '../models/event';
-import { ApiError } from '../middlewares/errorHandler';
+import { AuthRequest } from '../types/auth.ts';
+import Event from '../models/event.ts';
+import { ApiError } from '../middlewares/errorHandler.ts';
 
 // Получение всех событий
 export const getAllEvents = async (
