@@ -3,7 +3,7 @@
 </script>
 <template>
   <div class="contacts">
-    <img class="contacts__bg" src="images/bg.png" alt="">
+    <img class="contacts__bg" src="./images/bg.png" alt="">
     <div class="contacts__container container">
       <h3 class="contacts__title">Ждём вас в гости!</h3>
 

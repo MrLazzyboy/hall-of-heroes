@@ -1,6 +1,6 @@
 <template>
   <div class="tariffs">
-    <img class="tariffs__bg" src="images/bg.png" alt="">
+    <img class="tariffs__bg" src="./images/bg.png" alt="">
     <PriceComponents />
     <IncludeComponent />
     <TypesComponent />

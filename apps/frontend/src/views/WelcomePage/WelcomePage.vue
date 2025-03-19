@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 <template>
     <div class="welcome">
-        <img class="welcome__bg" src="images/bg.png" alt="">
+        <img class="welcome__bg" src="./images/bg.png" alt="">
         <div class="welcome__container container">
             <h3 class="welcome__title">Добро пожаловать в чертоги, Герой!</h3>
             <h4 class="welcome__subtitle">Регистрация прошла успешно. Автоматическая переадресация…</h4>

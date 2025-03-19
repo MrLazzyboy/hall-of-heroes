@@ -62,7 +62,7 @@ const passwordMatchError = computed(() => {
 </script>
 <template>
   <div class="registration">
-    <img class="registration__bg" src="images/bg.png" alt="">
+    <img class="registration__bg" src="./images/bg.png" alt="">
     <div class="registration__container container">
       <h3 class="registration__title">Регистрация</h3>
       <h4 class="registration__subtitle">Создайте профиль и погрузитесь в мир приключений вместе с нами!</h4>

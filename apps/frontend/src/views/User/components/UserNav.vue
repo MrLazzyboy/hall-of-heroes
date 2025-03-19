@@ -6,27 +6,27 @@
     <ul class="user__nav-list">
       <li class="user__nav-item">
         <router-link :to="{ name: 'user-profile' }" class="user__nav-link" active-class="active">
-          <img src="images/user.svg" alt=""> Профиль
+          <img src="./images/user.svg" alt=""> Профиль
         </router-link>
       </li>
       <li class="user__nav-item">
         <router-link :to="{ name: 'user-events' }" class="user__nav-link" active-class="active">
-          <img src="images/event.svg" alt=""> Мои события
+          <img src="./images/event.svg" alt=""> Мои события
         </router-link>
       </li>
       <li class="user__nav-item">
         <router-link :to="{ name: 'user-notifications' }" class="user__nav-link" active-class="active">
-          <img src="images/notifs.svg" alt=""> Уведомления
+          <img src="./images/notifs.svg" alt=""> Уведомления
         </router-link>
       </li>
       <li class="user__nav-item">
         <router-link :to="{ name: 'user-favourites' }" class="user__nav-link" active-class="active">
-          <img src="images/star.svg" alt=""> Избранные мастера
+          <img src="./images/star.svg" alt=""> Избранные мастера
         </router-link>
       </li>
       <li class="user__nav-item">
         <router-link :to="{ name: 'user-settings' }" class="user__nav-link" active-class="active">
-          <img src="images/settings.svg" alt=""> Настройки
+          <img src="./images/settings.svg" alt=""> Настройки
         </router-link>
       </li>
     </ul>
