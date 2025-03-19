@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "npx tsx src/server.ts",
     "build": "tsc",
+    "start": "node dist/server.js",
+    "prod": "npm run build && npm run start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

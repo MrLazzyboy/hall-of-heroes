@@ -82,7 +82,7 @@ npm start
 hall-of-heroes/
 ├── apps/
 │   ├── backend/         # Backend на Express
-│   └── frontend/        # Frontend на React
+│   └── frontend/        # Frontend на Vue
 ├── package.json
 └── README.md
 ```
