@@ -48,6 +48,3 @@ jobs:
             
             # Рестарт PM2 процесса
             pm2 restart hall-of-heroes-backend || npm run start:pm2
-            
-            # Добавление записи о деплое в лог (опционально)
-            echo "Deployed version ${GITHUB_REF#refs/tags/} at $(date)" >> /var/log/hallofheroes-deploy.log
