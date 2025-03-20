@@ -10,7 +10,7 @@
         </div>
         <h3 class="home__content-title">аутентичный клуб для игр в D&D в Москве</h3>
         <p class="home__content-txt">Погрузитесь в фэнтезийную атмосферу вместе с нами!</p>
-        <div class="home__content-btn">К приключениям!</div>
+        <div class="home__content-btn">К приключениям!!</div>
       </div>
     </div>
   </div>
