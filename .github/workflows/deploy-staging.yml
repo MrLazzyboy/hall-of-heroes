@@ -1,0 +1,50 @@
+name: Deploy Staging
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Deploy to staging server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USERNAME }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          script: |
+            # Переход в директорию dev окружения
+            cd /home/hallofheroes/dev
+            
+            # Обновление кода из репозитория
+            git fetch --all
+            git reset --hard origin/master
+            
+            # Установка и сборка бэкенда
+            cd apps/backend
+            npm i
+            npm run build
+            
+            # Установка и сборка фронтенда
+            cd ../frontend
+            npm i
+            npm run build
+            
+            # Возврат в корневую директорию проекта
+            cd /home/hallofheroes/dev
+            
+            # Рестарт PM2 процесса
+            pm2 restart dev-hall-of-heroes-backend || npm run start:pm2
