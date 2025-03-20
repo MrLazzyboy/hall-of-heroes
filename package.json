@@ -7,7 +7,12 @@
     "dev:frontend": "npm --workspace=apps/frontend run dev",
     "dev:backend": "npm --workspace=apps/backend run dev",
     "dev": "npm run dev:frontend & npm run dev:backend",
-    "build": "npm run build:frontend && npm run build:backend"
+    "build:frontend": "npm --workspace=apps/frontend run build",
+    "build:backend": "npm --workspace=apps/backend run build",
+    "build": "npm run build:frontend && npm run build:backend",
+    "start:backend": "npm --workspace=apps/backend run start",
+    "start:pm2": "pm2 start ecosystem.config.cjs",
+    "start": "npm run start:backend"
   },
   "keywords": [],
   "author": "",

@@ -6,7 +6,7 @@
     <div class="profile">
         <div class="profile__top">
             <div class="profile__top-left">
-                <img src="images/avatar.png" alt="">
+                <img src="./images/avatar.png" alt="">
                 <div class="profile__left-info">
                     <div class="profile__left-login">Kotiqueee</div>
                 </div>

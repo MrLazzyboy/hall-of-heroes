@@ -6,27 +6,27 @@
     <ul class="user__nav-list">
       <li class="user__nav-item">
         <router-link :to="{ name: 'admin-profile' }" class="user__nav-link" active-class="active">
-          <img src="images/user.svg" alt=""> Профиль
+          <img src="./images/user.svg" alt=""> Профиль
         </router-link>
       </li>
       <li class="user__nav-item">
         <router-link :to="{ name: 'admin-events' }" class="user__nav-link" active-class="active">
-          <img src="images/event.svg" alt=""> Мои события
+          <img src="./images/event.svg" alt=""> Мои события
         </router-link>
       </li>
       <li class="user__nav-item">
         <router-link :to="{ name: 'admin-notifications' }" class="user__nav-link" active-class="active">
-          <img src="images/notifs.svg" alt=""> Уведомления
+          <img src="./images/notifs.svg" alt=""> Уведомления
         </router-link>
       </li>
       <li class="user__nav-item">
         <router-link :to="{ name: 'admin-favourites' }" class="user__nav-link" active-class="active">
-          <img src="images/star.svg" alt=""> Избранные мастера
+          <img src="./images/star.svg" alt=""> Избранные мастера
         </router-link>
       </li>
       <li class="user__nav-item">
         <router-link :to="{ name: 'admin-settings' }" class="user__nav-link" active-class="active">
-          <img src="images/settings.svg" alt=""> Настройки
+          <img src="./images/settings.svg" alt=""> Настройки
         </router-link>
       </li>
     </ul>
@@ -36,12 +36,12 @@
     <ul class="user__nav-list admin__list">
       <li class="user__nav-item">
         <router-link :to="{ name: 'admin-base-user' }" class="user__nav-link" active-class="active">
-          <img src="images/people.svg" alt=""> База пользователей
+          <img src="./images/people.svg" alt=""> База пользователей
         </router-link>
       </li>
       <li class="user__nav-item">
         <router-link :to="{ name: 'admin-tags' }" class="user__nav-link" active-class="active">
-          <img src="images/edit.svg" alt=""> Редактировать теги
+          <img src="./images/edit.svg" alt=""> Редактировать теги
         </router-link>
       </li>
     </ul>

@@ -5,12 +5,12 @@
 <template>
     <div class="favourite__masters">
         <div class="favourite__masters-item">
-            <img src="images/avatar.png" alt="">
+            <img src="./images/avatar.png" alt="">
             <div class="favourite__masters-username">ываыввыа</div>
         </div>
 
         <div class="favourite__masters-item">
-            <img src="images/avatar.png" alt="">
+            <img src="./images/avatar.png" alt="">
             <div class="favourite__masters-username">ваываываываав</div>
         </div>
 

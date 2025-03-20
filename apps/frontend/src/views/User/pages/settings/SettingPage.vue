@@ -42,7 +42,7 @@ const togglePasswordRequireVisibility = () => {
         <form action="">
             <div class="settings__top">
                 <div class="settings__top-left">
-                    <img src="images/Vector.svg" alt="">
+                    <img src="./images/Vector.svg" alt="">
 
                     <div class="settings__left-title">Нажмите для выбора изображения, либо перетащите его</div>
                     <div class="settings__left-subtitle">Формат jpeg, jpg, png, весом не более 1 MB и размером не более

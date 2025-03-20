@@ -17,13 +17,13 @@ const addModal = ref(false)
                         <div class="tags__card-undertitle">Короткое название</div>
                     </div>
                     <div class="tags__card-right">
-                        <img src="images/PencilSimple.svg" alt="">
-                        <img src="images/X.svg" alt="">
+                        <img src="./images/PencilSimple.svg" alt="">
+                        <img src="./images/X.svg" alt="">
                     </div>
 
                 </div>
                 <div class="tags__card-bottom"  @click="addModal = true">
-                    <img src="images/Vector.svg" alt="">
+                    <img src="./images/Vector.svg" alt="">
                     Добавить
                 </div>
             </div>
@@ -35,13 +35,13 @@ const addModal = ref(false)
                         <div class="tags__card-undertitle">Короткое название</div>
                     </div>
                     <div class="tags__card-right">
-                        <img src="images/PencilSimple.svg" alt="">
-                        <img src="images/X.svg" alt="">
+                        <img src="./images/PencilSimple.svg" alt="">
+                        <img src="./images/X.svg" alt="">
                     </div>
 
                 </div>
                 <div class="tags__card-bottom"  @click="addModal = true">
-                    <img src="images/Vector.svg" alt="">
+                    <img src="./images/Vector.svg" alt="">
                     Добавить
                 </div>
             </div>
@@ -53,13 +53,13 @@ const addModal = ref(false)
                         <div class="tags__card-undertitle">Короткое название</div>
                     </div>
                     <div class="tags__card-right">
-                        <img src="images/PencilSimple.svg" alt="">
-                        <img src="images/X.svg" alt="">
+                        <img src="./images/PencilSimple.svg" alt="">
+                        <img src="./images/X.svg" alt="">
                     </div>
 
                 </div>
                 <div class="tags__card-bottom"  @click="addModal = true">
-                    <img src="images/Vector.svg" alt="">
+                    <img src="./images/Vector.svg" alt="">
                     Добавить
                 </div>
             </div>
@@ -73,13 +73,13 @@ const addModal = ref(false)
                         <div class="tags__card-undertitle">Короткое название</div>
                     </div>
                     <div class="tags__card-right">
-                        <img src="images/PencilSimple.svg" alt="">
-                        <img src="images/X.svg" alt="">
+                        <img src="./images/PencilSimple.svg" alt="">
+                        <img src="./images/X.svg" alt="">
                     </div>
 
                 </div>
                 <div class="tags__card-bottom"  @click="addModal = true">
-                    <img src="images/Vector.svg" alt="">
+                    <img src="./images/Vector.svg" alt="">
                     Добавить
                 </div>
             </div>
@@ -91,13 +91,13 @@ const addModal = ref(false)
                         <div class="tags__card-undertitle">Короткое название</div>
                     </div>
                     <div class="tags__card-right">
-                        <img src="images/PencilSimple.svg" alt="">
-                        <img src="images/X.svg" alt="">
+                        <img src="./images/PencilSimple.svg" alt="">
+                        <img src="./images/X.svg" alt="">
                     </div>
 
                 </div>
                 <div class="tags__card-bottom"  @click="addModal = true">
-                    <img src="images/Vector.svg" alt="">
+                    <img src="./images/Vector.svg" alt="">
                     Добавить
                 </div>
             </div>
@@ -109,13 +109,13 @@ const addModal = ref(false)
                         <div class="tags__card-undertitle">Короткое название</div>
                     </div>
                     <div class="tags__card-right">
-                        <img src="images/PencilSimple.svg" alt="">
-                        <img src="images/X.svg" alt="">
+                        <img src="./images/PencilSimple.svg" alt="">
+                        <img src="./images/X.svg" alt="">
                     </div>
 
                 </div>
                 <div class="tags__card-bottom"  @click="addModal = true">
-                    <img src="images/Vector.svg" alt="">
+                    <img src="./images/Vector.svg" alt="">
                     Добавить
                 </div>
             </div>

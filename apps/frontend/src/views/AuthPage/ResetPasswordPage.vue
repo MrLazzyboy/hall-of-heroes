@@ -1,7 +1,7 @@
 <!-- MainContent.vue -->
 <template>
   <div class="reset">
-    <img class="reset__bg" src="images/bg1.png" alt="">
+    <img class="reset__bg" src="./images/bg1.png" alt="">
     <div class="reset__container container">
       <h3 class="reset__title">Восстановление пароля</h3>
 

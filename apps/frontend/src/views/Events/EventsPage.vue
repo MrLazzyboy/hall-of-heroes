@@ -13,33 +13,33 @@ import EventsFilter from './components/EventsFilter.vue';
             <div class="club__events-row">
                 <div class="club__events-intro">
                     <div class="club__intro-item">
-                        <img src="images/calendar.svg" alt="">
+                        <img src="./images/calendar.svg" alt="">
                         <div class="club__intro-txt">Используйте <span>Стрелки <></span> для навигации по календарю
                         </div>
                     </div>
                     <div class="club__intro-item">
-                        <img src="images/filter.svg" alt="">
+                        <img src="./images/filter.svg" alt="">
                         <div class="club__intro-txt">Выбирайте <span>Фильтры</span> для подбора подходящего События
                         </div>
                     </div>
                     <div class="club__intro-item">
-                        <img src="images/chat.svg" alt="">
+                        <img src="./images/chat.svg" alt="">
                         <div class="club__intro-txt">Нажимайте на <span>Событие</span> для отображения подробной
                             информации</div>
                     </div>
                     <div class="club__intro-item">
-                        <img src="images/heart.svg" alt="">
+                        <img src="./images/heart.svg" alt="">
                         <div class="club__intro-txt">Обратите внимание на тип <span>События </span> — Игровая сессия
                             или Мероприятие</div>
                     </div>
                     <div class="club__intro-item">
-                        <img src="images/edit.svg" alt="">
+                        <img src="./images/edit.svg" alt="">
                         <div class="club__intro-txt">Кнопка <span>Записаться</span> добавит вас в список участников
                             События,
                             если есть места</div>
                     </div>
                     <div class="club__intro-item">
-                        <img src="images/watch.svg" alt="">
+                        <img src="./images/watch.svg" alt="">
                         <div class="club__intro-txt">Кнопка <span>Ожидать</span> заявит о желании участвовать в Событии,
                             если появятся места</div>
                     </div>

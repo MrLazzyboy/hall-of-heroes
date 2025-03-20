@@ -31,7 +31,7 @@
             </div>
 
           </div>
-          <img class="contacts__left-line" src="images/line.png" alt="">
+          <img class="contacts__left-line" src="./images/line.png" alt="">
 
           <div class="contacts__left-map">
             <div style="position:relative;overflow:hidden;"><a
@@ -79,7 +79,7 @@
         <h3 class="contacts__ways-title">Как добраться?</h3>
         <div class="contacts__ways-boxes">
           <div class="contacts__ways-box">
-            <img src="images/1.png" alt="">
+            <img src="./images/1.png" alt="">
 
             <div class="contacts__box-info">
               <div class="contacts__box-title">Метро Арбатская: </div>
@@ -91,7 +91,7 @@
             </div>
           </div>
           <div class="contacts__ways-box">
-            <img src="images/2.png" alt="">
+            <img src="./images/2.png" alt="">
 
             <div class="contacts__box-info">
               <div class="contacts__box-title">Далее около 10 минут пешком: </div>
@@ -104,7 +104,7 @@
             </div>
           </div>
           <div class="contacts__ways-box">
-            <img src="images/3.png" alt="">
+            <img src="./images/3.png" alt="">
 
             <div class="contacts__box-info">
               <div class="contacts__box-title">Поворот в Серебрянный переулок </div>
@@ -117,7 +117,7 @@
             </div>
           </div>
           <div class="contacts__ways-box">
-            <img src="images/4.png" alt="">
+            <img src="./images/4.png" alt="">
 
             <div class="contacts__box-info">
               <div class="contacts__box-title">Поворот во двор на углу дома «улица Арбат, 18/1с2» </div>

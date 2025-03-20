@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 <template>
     <div class="require">
-        <img class="require__bg" src="images/bg1.png" alt="">
+        <img class="require__bg" src="./images/bg1.png" alt="">
         <div class="require__container container">
             <h3 class="require__title">На вашу почту отправлено письмо</h3>
             <h4 class="require__subtitle">Перейдите по ссылке из письма, чтобы подтвердить аккаунт</h4>
