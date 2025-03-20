@@ -1,0 +1,53 @@
+name: Deploy Production
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Deploy to production server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.PRODUCTION_HOST }}
+          username: ${{ secrets.PRODUCTION_USERNAME }}
+          password: ${{ secrets.STAGING_PASSWORD }}
+          script: |
+            # Переход в директорию prod окружения
+            cd /home/hallofheroes/prod
+            
+            # Обновление кода из репозитория и переключение на тег
+            git fetch --all --tags
+            git checkout ${GITHUB_REF#refs/tags/}
+            
+            # Установка и сборка бэкенда
+            cd apps/backend
+            npm i
+            npm run build
+            
+            # Установка и сборка фронтенда
+            cd ../frontend
+            npm i
+            npm run build
+                        
+            # Возврат в корневую директорию проекта
+            cd /home/hallofheroes/prod
+            
+            # Рестарт PM2 процесса
+            pm2 restart hall-of-heroes-backend || npm run start:pm2
+            
+            # Добавление записи о деплое в лог (опционально)
+            echo "Deployed version ${GITHUB_REF#refs/tags/} at $(date)" >> /var/log/hallofheroes-deploy.log
