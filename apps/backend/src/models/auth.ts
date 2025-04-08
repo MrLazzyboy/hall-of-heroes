@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import { IEvent } from './event';
 
 export interface User extends Document {
   username: string;
@@ -14,6 +15,10 @@ export interface User extends Document {
     avatarUrl?: string;
     bio?: string;
   };
+  // Виртуальные поля
+  createdEvents: IEvent[];
+  participatingEvents: IEvent[];
+  invitedEvents: IEvent[];
 }
 
 const UserSchema = new Schema<User>({
@@ -23,11 +28,36 @@ const UserSchema = new Schema<User>({
   role: { type: String, enum: ['Player', 'Admin'], default: 'Player' },
   roles: { type: [String], default: [] }, // Для дополнительных ролей
   createdAt: { type: Date, default: Date.now },
+  isBlocked: { type: Boolean, default: false },
+  blockUntil: { type: Date, default: null },
   events: [{ type: Schema.Types.ObjectId, ref: 'Event' }], // Добавляем поле events
   profile: {
     avatarUrl: { type: String },
     bio: { type: String }
   }
 });
+
+// Добавляем виртуальные поля для событий
+UserSchema.virtual('createdEvents', {
+  ref: 'Event',
+  localField: '_id',
+  foreignField: 'creator'
+});
+
+UserSchema.virtual('participatingEvents', {
+  ref: 'Event',
+  localField: '_id',
+  foreignField: 'participants'
+});
+
+UserSchema.virtual('invitedEvents', {
+  ref: 'Event',
+  localField: '_id',
+  foreignField: 'invitations'
+});
+
+// Включаем виртуальные поля при преобразовании в JSON
+UserSchema.set('toJSON', { virtuals: true });
+UserSchema.set('toObject', { virtuals: true });
 
 export default mongoose.model<User>('User', UserSchema);

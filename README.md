@@ -52,12 +52,62 @@ docker run -d -p 27017:27017 --name mongodb mongo:latest
 - Для продакшена: `npm run prod`
 
 ### API Endpoints
+
+#### Аутентификация
 - `POST /auth/register` - Регистрация пользователя
+  ```json
+  {
+    "username": "string",
+    "password": "string",
+    "email": "string"
+  }
+  ```
 - `POST /auth/login` - Авторизация
-- `GET /events` - Получение списка мероприятий
-- `POST /events` - Создание мероприятия
-- `GET /users` - Получение списка пользователей
-- `GET /news` - Получение новостей
+  ```json
+  {
+    "username": "string",
+    "password": "string"
+  }
+  ```
+
+#### События
+- `GET /events` - Получение всех событий пользователя (где он создатель, участник или приглашенный)
+- `GET /events/:id` - Получение информации о конкретном событии
+- `POST /events` - Создание нового события
+  ```json
+  {
+    "title": "string",
+    "description": "string",
+    "date": "string (ISO date)"
+  }
+  ```
+- `PUT /events/:id` - Обновление события
+  ```json
+  {
+    "title": "string (optional)",
+    "description": "string (optional)",
+    "date": "string (ISO date, optional)",
+    "status": "string (optional, только для админов)"
+  }
+  ```
+- `DELETE /events/:id` - Удаление события
+- `POST /events/:id/invite` - Приглашение пользователя на событие
+  ```json
+  {
+    "userId": "string"
+  }
+  ```
+- `POST /events/:id/accept` - Принятие приглашения на событие
+- `POST /events/:id/reject` - Отклонение приглашения на событие
+
+#### Общее
+- `GET /news` - Получение списка новостей
+- `GET /filters` - Получение доступных фильтров
+
+Все эндпоинты, кроме `/auth/register` и `/auth/login`, требуют заголовок авторизации:
+```
+Authorization: Bearer <jwt_token>
+```
 
 ## Frontend
 

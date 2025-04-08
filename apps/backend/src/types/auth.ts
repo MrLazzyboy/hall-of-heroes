@@ -1,8 +1,11 @@
 import { Request } from 'express';
 import mongoose from 'mongoose';
+import { User } from '../models/auth';
 
 export interface AuthRequest extends Request {
-  user?: { userId: mongoose.Types.ObjectId };
+  user?: User;
   file?: Express.Multer.File;
-  files?: { [fieldname: string]: Express.Multer.File[] } | Express.Multer.File[];
+  files?: {
+    [fieldname: string]: Express.Multer.File[];
+  };
 }
