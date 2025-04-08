@@ -9,6 +9,11 @@ export interface User extends Document {
   createdAt: Date;
   isBlocked: boolean;
   blockUntil: Date | null;
+  events: mongoose.Types.ObjectId[]; // Добавляем поле events
+  profile: {
+    avatarUrl?: string;
+    bio?: string;
+  };
 }
 
 const UserSchema = new Schema<User>({
@@ -18,6 +23,11 @@ const UserSchema = new Schema<User>({
   role: { type: String, enum: ['Player', 'Admin'], default: 'Player' },
   roles: { type: [String], default: [] }, // Для дополнительных ролей
   createdAt: { type: Date, default: Date.now },
+  events: [{ type: Schema.Types.ObjectId, ref: 'Event' }], // Добавляем поле events
+  profile: {
+    avatarUrl: { type: String },
+    bio: { type: String }
+  }
 });
 
 export default mongoose.model<User>('User', UserSchema);

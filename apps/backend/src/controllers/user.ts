@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../types/auth.ts';
-import User from '../models/user.ts';
+import User from '../models/auth.ts';
 import Notification from '../models/notification.ts';
 import { ApiError } from '../middlewares/errorHandler.ts';
 
