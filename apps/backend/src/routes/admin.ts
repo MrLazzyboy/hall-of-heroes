@@ -8,6 +8,7 @@ import {
   deleteNews,
   approveEvent,
   rejectEvent,
+  getAllUsers,
 } from '../controllers/admin.ts';
 import { authMiddleware } from '../middlewares/auth.ts';
 import { isAdmin } from '../middlewares/roles.ts';
@@ -19,6 +20,7 @@ router.post('/events/:id/approve', authMiddleware as RequestHandler, isAdmin as 
 router.post('/events/:id/reject', authMiddleware as RequestHandler, isAdmin as RequestHandler, rejectEvent as RequestHandler);
 
 // Роуты для управления пользователями
+router.get('/users', authMiddleware as RequestHandler, isAdmin as RequestHandler, getAllUsers as RequestHandler);
 router.patch('/users/:id/block', authMiddleware as RequestHandler, isAdmin as RequestHandler, blockUser as RequestHandler);
 router.patch('/users/:id/unblock', authMiddleware as RequestHandler, isAdmin as RequestHandler, unblockUser as RequestHandler);
 

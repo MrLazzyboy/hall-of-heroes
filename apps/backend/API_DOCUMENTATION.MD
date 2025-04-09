@@ -227,25 +227,59 @@ Content-Type: application/json
 
 ## 🔹 Администрирование (`/admin`)
 
-### **1. Одобрение события**
+### **1. Получение всех пользователей**
+```http
+GET /admin/users
+Authorization: Bearer <token>
+```
+#### 🔹 **Параметры запроса**
+- `page` (опционально): номер страницы (по умолчанию: 1)
+- `limit` (опционально): количество пользователей на странице (по умолчанию: 10)
+
+#### 🔹 **Ответ (200)**
+```json
+{
+  "users": [
+    {
+      "id": "user_id",
+      "username": "JohnDoe",
+      "email": "user@example.com",
+      "role": "Player",
+      "roles": ["Master"],
+      "isBlocked": false,
+      "profile": {
+        "avatarUrl": "https://example.com/avatar.jpg",
+        "bio": "About me"
+      }
+    }
+  ],
+  "pagination": {
+    "total": 100,
+    "page": 1,
+    "pages": 10
+  }
+}
+```
+
+### **2. Одобрение события**
 ```http
 POST /admin/events/:id/approve
 Authorization: Bearer <token>
 ```
 
-### **2. Отклонение события**
+### **3. Отклонение события**
 ```http
 POST /admin/events/:id/reject
 Authorization: Bearer <token>
 ```
 
-### **3. Блокировка пользователя**
+### **4. Блокировка пользователя**
 ```http
 PATCH /admin/users/:id/block
 Authorization: Bearer <token>
 ```
 
-### **4. Разблокировка пользователя**
+### **5. Разблокировка пользователя**
 ```http
 PATCH /admin/users/:id/unblock
 Authorization: Bearer <token>

@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, RequestHandler } from 'express';
 import {
   getCurrentUser,
   updateCurrentUser,
@@ -12,11 +12,11 @@ import { upload } from '../middlewares/upload.ts';
 
 const router = Router();
 
-router.get('/me', authMiddleware, getCurrentUser);
-router.patch('/me', authMiddleware, updateCurrentUser);
-router.delete('/me', authMiddleware, deleteCurrentUser);
-router.get('/:id', authMiddleware, getUserById);
-router.get('/me/notifications', authMiddleware, getUserNotifications);
-router.post('/me/avatar', authMiddleware, upload.single('file'), uploadAvatar);
+router.get('/me', authMiddleware as RequestHandler, getCurrentUser as RequestHandler);
+router.patch('/me', authMiddleware as RequestHandler, updateCurrentUser as RequestHandler);
+router.delete('/me', authMiddleware as RequestHandler, deleteCurrentUser as RequestHandler);
+router.get('/:id', authMiddleware as RequestHandler, getUserById as RequestHandler);
+router.get('/me/notifications', authMiddleware as RequestHandler, getUserNotifications as RequestHandler);
+router.post('/me/avatar', authMiddleware as RequestHandler, upload.single('file'), uploadAvatar as RequestHandler);
 
 export default router;

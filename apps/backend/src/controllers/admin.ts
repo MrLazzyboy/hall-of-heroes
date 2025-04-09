@@ -1,4 +1,4 @@
-import { Response, NextFunction } from 'express';
+import { Response, NextFunction, Request } from 'express';
 import { AuthRequest } from '../types/auth.ts';
 import Event from '../models/event.ts';
 import User from '../models/auth.ts';
@@ -193,5 +193,32 @@ export const deleteNews = async (
     res.status(200).json({ message: 'Новость успешно удалена' });
   } catch (error) {
     next(error);
+  }
+};
+
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const skip = (page - 1) * limit;
+
+    const users = await User.find({})
+      .select('-password') // Исключаем пароль из результатов
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    const total = await User.countDocuments();
+
+    res.json({
+      users,
+      pagination: {
+        total,
+        page,
+        pages: Math.ceil(total / limit)
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Ошибка при получении списка пользователей' });
   }
 };
