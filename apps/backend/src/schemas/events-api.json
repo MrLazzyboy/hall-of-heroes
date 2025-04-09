@@ -3,48 +3,36 @@
     "info": {
       "title": "Events API",
       "version": "1.0.0",
-      "description": "API для управления событиями: просмотр, создание, редактирование, приглашение участников и отправка на модерацию."
+      "description": "API для управления событиями"
     },
+    "tags": [
+      {
+        "name": "События",
+        "description": "Операции с событиями"
+      },
+      {
+        "name": "Фильтры",
+        "description": "Управление фильтрами для событий"
+      },
+      {
+        "name": "Администрирование",
+        "description": "Административные функции"
+      }
+    ],
     "paths": {
       "/events": {
         "get": {
-          "summary": "Список всех событий",
-          "parameters": [
-            {
-              "name": "page",
-              "in": "query",
-              "schema": { "type": "integer", "default": 1 },
-              "description": "Номер страницы для пагинации"
-            },
-            {
-              "name": "limit",
-              "in": "query",
-              "schema": { "type": "integer", "default": 10 },
-              "description": "Количество событий на странице"
-            }
-          ],
+          "tags": ["События"],
+          "summary": "Получение всех событий пользователя",
+          "security": [{ "bearerAuth": [] }],
           "responses": {
             "200": {
-              "description": "Успешное получение списка событий",
+              "description": "Список событий пользователя",
               "content": {
                 "application/json": {
                   "schema": {
-                    "type": "object",
-                    "properties": {
-                      "events": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "id": { "type": "string" },
-                            "title": { "type": "string" },
-                            "description": { "type": "string" },
-                            "date": { "type": "string", "format": "date-time" },
-                            "status": { "type": "string", "enum": ["active", "archived", "pending"] }
-                          }
-                        }
-                      }
-                    }
+                    "type": "array",
+                    "items": { "$ref": "#/components/schemas/Event" }
                   }
                 }
               }
@@ -53,42 +41,54 @@
         },
         "post": {
           "summary": "Создание нового события",
-          "security": [
-            { "bearerAuth": [] }
-          ],
+          "security": [{ "bearerAuth": [] }],
           "requestBody": {
             "required": true,
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "title",
+                    "shortDescription",
+                    "description",
+                    "organizerInfo",
+                    "date",
+                    "startTime",
+                    "endTime",
+                    "location",
+                    "price",
+                    "maxParticipants"
+                  ],
                   "properties": {
                     "title": { "type": "string" },
+                    "shortDescription": { "type": "string" },
                     "description": { "type": "string" },
-                    "date": { "type": "string", "format": "date-time" },
-                    "invitations": {
-                      "type": "array",
-                      "items": { "type": "string" },
-                      "description": "Массив идентификаторов пользователей для приглашения"
-                    }
-                  },
-                  "required": ["title", "description", "date"]
+                    "organizerInfo": { "type": "string" },
+                    "imageUrl": { "type": "string" },
+                    "date": { "type": "string", "format": "date" },
+                    "startTime": { "type": "string", "format": "time" },
+                    "endTime": { "type": "string", "format": "time" },
+                    "location": { "type": "string" },
+                    "price": { "type": "number" },
+                    "discount": { "type": "number" },
+                    "maxParticipants": { "type": "number" },
+                    "isPrivate": { "type": "boolean" },
+                    "status": { "type": "string", "enum": ["approved", "archived", "pending", "rejected"] },
+                    "creator": { "type": "string" },
+                    "participants": { "type": "array", "items": { "type": "string" } },
+                    "invitations": { "type": "array", "items": { "type": "string" } }
+                  }
                 }
               }
             }
           },
           "responses": {
             "201": {
-              "description": "Событие успешно создано",
+              "description": "Событие создано",
               "content": {
                 "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "id": { "type": "string" },
-                      "message": { "type": "string" }
-                    }
-                  }
+                  "schema": { "$ref": "#/components/schemas/Event" }
                 }
               }
             }
@@ -97,58 +97,61 @@
       },
       "/events/{id}": {
         "get": {
-          "summary": "Получение информации о конкретном событии",
+          "summary": "Получение информации о событии",
+          "security": [{ "bearerAuth": [] }],
           "parameters": [
             {
               "name": "id",
               "in": "path",
               "required": true,
-              "schema": { "type": "string" },
-              "description": "Идентификатор события"
+              "schema": { "type": "string" }
             }
           ],
           "responses": {
             "200": {
-              "description": "Успешное получение информации о событии",
+              "description": "Информация о событии",
               "content": {
                 "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "id": { "type": "string" },
-                      "title": { "type": "string" },
-                      "description": { "type": "string" },
-                      "date": { "type": "string", "format": "date-time" },
-                      "status": { "type": "string" },
-                      "creator": {
-                        "type": "object",
-                        "properties": {
-                          "id": { "type": "string" },
-                          "username": { "type": "string" }
-                        }
-                      }
-                    }
-                  }
+                  "schema": { "$ref": "#/components/schemas/Event" }
                 }
               }
             }
           }
         },
         "put": {
-          "summary": "Редактирование созданного события",
-          "security": [
-            { "bearerAuth": [] }
+          "summary": "Обновление события",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" }
+            }
           ],
           "requestBody": {
-            "required": true,
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "title": { "type": "string" },
+                    "shortDescription": { "type": "string" },
                     "description": { "type": "string" },
-                    "date": { "type": "string", "format": "date-time" }
+                    "organizerInfo": { "type": "string" },
+                    "imageUrl": { "type": "string" },
+                    "date": { "type": "string", "format": "date" },
+                    "startTime": { "type": "string", "format": "time" },
+                    "endTime": { "type": "string", "format": "time" },
+                    "location": { "type": "string" },
+                    "price": { "type": "number" },
+                    "discount": { "type": "number" },
+                    "maxParticipants": { "type": "number" },
+                    "isPrivate": { "type": "boolean" },
+                    "status": { "type": "string", "enum": ["approved", "archived", "pending", "rejected"] },
+                    "creator": { "type": "string" },
+                    "participants": { "type": "array", "items": { "type": "string" } },
+                    "invitations": { "type": "array", "items": { "type": "string" } }
                   }
                 }
               }
@@ -156,39 +159,32 @@
           },
           "responses": {
             "200": {
-              "description": "Событие успешно обновлено",
+              "description": "Событие обновлено",
               "content": {
                 "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "message": { "type": "string" }
-                    }
-                  }
+                  "schema": { "$ref": "#/components/schemas/Event" }
                 }
               }
             }
           }
         },
         "delete": {
-            "summary": "Удаление события",
-            "security": [
-              { "bearerAuth": [] }
-            ],
-            "parameters": [
-              {
-                "name": "id",
-                "in": "path",
-                "required": true,
-                "schema": { "type": "string" },
-                "description": "Идентификатор события"
-              }
-            ],
-            "responses": {
-              "200": { "description": "Событие успешно удалено" },
-              "403": { "description": "Недостаточно прав для удаления" }
+          "summary": "Удаление события",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Событие удалено"
             }
           }
+        }
       },
       "/users/{id}/events": {
         "get": {
@@ -266,14 +262,330 @@
             "200": { "description": "Ответ на приглашение успешно сохранён" }
           }
         }
+      },
+      "/admin/events/{id}/approve": {
+        "post": {
+          "summary": "Одобрение события администратором",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" },
+              "description": "ID события"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Событие одобрено",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/Event" }
+                }
+              }
+            },
+            "403": {
+              "description": "Нет прав администратора"
+            }
+          }
+        }
+      },
+      "/admin/events/{id}/reject": {
+        "post": {
+          "summary": "Отклонение события администратором",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" },
+              "description": "ID события"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Событие отклонено",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/Event" }
+                }
+              }
+            },
+            "403": {
+              "description": "Нет прав администратора"
+            }
+          }
+        }
+      },
+      "/admin/users/{id}/block": {
+        "patch": {
+          "summary": "Блокировка пользователя",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" },
+              "description": "ID пользователя"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Пользователь заблокирован"
+            },
+            "403": {
+              "description": "Нет прав администратора"
+            }
+          }
+        }
+      },
+      "/admin/users/{id}/unblock": {
+        "patch": {
+          "summary": "Разблокировка пользователя",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" },
+              "description": "ID пользователя"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Пользователь разблокирован"
+            },
+            "403": {
+              "description": "Нет прав администратора"
+            }
+          }
+        }
+      },
+      "/admin/news": {
+        "post": {
+          "summary": "Создание новости",
+          "security": [{ "bearerAuth": [] }],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["title", "content"],
+                  "properties": {
+                    "title": { "type": "string" },
+                    "content": { "type": "string" },
+                    "imageUrl": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Новость создана"
+            },
+            "403": {
+              "description": "Нет прав администратора"
+            }
+          }
+        }
+      },
+      "/admin/news/{id}": {
+        "put": {
+          "summary": "Обновление новости",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" },
+              "description": "ID новости"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "title": { "type": "string" },
+                    "content": { "type": "string" },
+                    "imageUrl": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Новость обновлена"
+            },
+            "403": {
+              "description": "Нет прав администратора"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Удаление новости",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": { "type": "string" },
+              "description": "ID новости"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Новость удалена"
+            },
+            "403": {
+              "description": "Нет прав администратора"
+            }
+          }
+        }
+      },
+      "/common/filters": {
+        "get": {
+          "tags": ["Фильтры"],
+          "summary": "Получение списка фильтров",
+          "responses": {
+            "200": {
+              "description": "Список фильтров",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Filter"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/admin/filters": {
+        "post": {
+          "tags": ["Фильтры", "Администрирование"],
+          "summary": "Добавление нового фильтра",
+          "security": [{ "bearerAuth": [] }],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilterInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Фильтр создан",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Filter"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Нет прав администратора"
+            }
+          }
+        }
       }
     },
     "components": {
-      "securitySchemes": {
-        "bearerAuth": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
+      "schemas": {
+        "Event": {
+          "type": "object",
+          "properties": {
+            "_id": { "type": "string" },
+            "title": { "type": "string" },
+            "shortDescription": { "type": "string" },
+            "description": { "type": "string" },
+            "organizerInfo": { "type": "string" },
+            "imageUrl": { "type": "string" },
+            "date": { "type": "string", "format": "date" },
+            "startTime": { "type": "string", "format": "time" },
+            "endTime": { "type": "string", "format": "time" },
+            "location": { "type": "string" },
+            "price": { "type": "number" },
+            "discount": { "type": "number" },
+            "maxParticipants": { "type": "number" },
+            "isPrivate": { "type": "boolean" },
+            "status": { "type": "string", "enum": ["approved", "archived", "pending", "rejected"] },
+            "creator": { "type": "string" },
+            "participants": { "type": "array", "items": { "type": "string" } },
+            "invitations": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "securitySchemes": {
+          "bearerAuth": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT"
+          }
+        },
+        "Filter": {
+          "type": "object",
+          "properties": {
+            "_id": { "type": "string" },
+            "name": { "type": "string" },
+            "type": { 
+              "type": "string",
+              "enum": ["select", "multiselect", "range", "boolean"]
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": { "type": "string" },
+                  "value": { "type": "string" }
+                }
+              }
+            },
+            "min": { "type": "number" },
+            "max": { "type": "number" }
+          }
+        },
+        "FilterInput": {
+          "type": "object",
+          "required": ["name", "type"],
+          "properties": {
+            "name": { "type": "string" },
+            "type": { 
+              "type": "string",
+              "enum": ["select", "multiselect", "range", "boolean"]
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["label", "value"],
+                "properties": {
+                  "label": { "type": "string" },
+                  "value": { "type": "string" }
+                }
+              }
+            },
+            "min": { "type": "number" },
+            "max": { "type": "number" }
+          }
         }
       }
     }

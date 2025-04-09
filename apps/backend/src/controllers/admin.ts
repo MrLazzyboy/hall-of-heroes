@@ -20,7 +20,7 @@ export const approveEvent = async (
     event.status = 'approved';
     await event.save();
     await AdminAction.create({
-      adminId: req.user?.userId,
+      adminId: req.user?._id,
       actionType: 'approve',
       targetId: id,
     });
@@ -45,7 +45,7 @@ export const rejectEvent = async (
     event.status = 'rejected';
     await event.save();
     await AdminAction.create({
-      adminId: req.user?.userId,
+      adminId: req.user?._id,
       actionType: 'reject',
       targetId: id,
       reason,
@@ -72,7 +72,7 @@ export const blockUser = async (
     user.blockUntil = duration ? new Date(Date.now() + duration * 1000) : null;
     await user.save();
     await AdminAction.create({
-      adminId: req.user?.userId,
+      adminId: req.user?._id,
       actionType: 'block',
       targetId: id,
       reason,
@@ -97,7 +97,7 @@ export const unblockUser = async (
     user.isBlocked = false;
     await user.save();
     await AdminAction.create({
-      adminId: req.user?.userId,
+      adminId: req.user?._id,
       actionType: 'unblock',
       targetId: id,
     });
@@ -122,7 +122,7 @@ export const addFilter = async (
     const filter = new Filter({ name, options });
     await filter.save();
     await AdminAction.create({
-      adminId: req.user?.userId,
+      adminId: req.user?._id,
       actionType: 'add_filter',
       targetId: filter._id,
     });

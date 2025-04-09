@@ -77,16 +77,36 @@ docker run -d -p 27017:27017 --name mongodb mongo:latest
   ```json
   {
     "title": "string",
+    "shortDescription": "string",
     "description": "string",
-    "date": "string (ISO date)"
+    "organizerInfo": "string",
+    "imageUrl": "string (optional)",
+    "date": "string (ISO date)",
+    "startTime": "string (HH:mm)",
+    "endTime": "string (HH:mm)",
+    "location": "string",
+    "price": "number",
+    "discount": "number (0-100)",
+    "maxParticipants": "number",
+    "isPrivate": "boolean"
   }
   ```
 - `PUT /events/:id` - Обновление события
   ```json
   {
     "title": "string (optional)",
+    "shortDescription": "string (optional)",
     "description": "string (optional)",
+    "organizerInfo": "string (optional)",
+    "imageUrl": "string (optional)",
     "date": "string (ISO date, optional)",
+    "startTime": "string (HH:mm, optional)",
+    "endTime": "string (HH:mm, optional)",
+    "location": "string (optional)",
+    "price": "number (optional)",
+    "discount": "number (0-100, optional)",
+    "maxParticipants": "number (optional)",
+    "isPrivate": "boolean (optional)",
     "status": "string (optional, только для админов)"
   }
   ```

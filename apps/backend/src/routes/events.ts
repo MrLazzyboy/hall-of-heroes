@@ -1,36 +1,40 @@
-import { Router } from 'express';
+import { Router, RequestHandler } from 'express';
 import {
-  getAllEvents,
   createEvent,
-  getEventById,
+  getEvents,
+  getEvent,
   updateEvent,
   deleteEvent,
-  getUserEvents,
-  respondToInvitation,
-} from '../controllers/events.ts';
-import { authMiddleware } from '../middlewares/auth.ts';
+  inviteToEvent,
+  acceptInvitation,
+  rejectInvitation,
+} from '../controllers/event';
+import { authMiddleware } from '../middlewares/auth';
 
 const router = Router();
 
-// Список всех событий
-router.get('/', getAllEvents);
+// Получение всех событий пользователя
+router.get('/', authMiddleware as RequestHandler, getEvents as RequestHandler);
 
-// Создание нового события (только для авторизованных пользователей)
-router.post('/', authMiddleware, createEvent);
+// Создание нового события
+router.post('/', authMiddleware as RequestHandler, createEvent as RequestHandler);
 
-// Получение информации о конкретном событии
-router.get('/:id', authMiddleware, getEventById);
+// Получение конкретного события
+router.get('/:id', authMiddleware as RequestHandler, getEvent as RequestHandler);
 
-// Редактирование события (только автор события)
-router.put('/:id', authMiddleware, updateEvent);
+// Обновление события
+router.put('/:id', authMiddleware as RequestHandler, updateEvent as RequestHandler);
 
-// Удаление события (только автор события)
-router.delete('/:id', authMiddleware, deleteEvent);
+// Удаление события
+router.delete('/:id', authMiddleware as RequestHandler, deleteEvent as RequestHandler);
 
-// Получение событий конкретного пользователя
-router.get('/users/:id/events', getUserEvents);
+// Приглашение пользователя на событие
+router.post('/:id/invite', authMiddleware as RequestHandler, inviteToEvent as RequestHandler);
 
-// Ответ на приглашение (только приглашенные пользователи)
-router.post('/:id/invitation-response', authMiddleware, respondToInvitation);
+// Принятие приглашения
+router.post('/:id/accept', authMiddleware as RequestHandler, acceptInvitation as RequestHandler);
+
+// Отклонение приглашения
+router.post('/:id/reject', authMiddleware as RequestHandler, rejectInvitation as RequestHandler);
 
 export default router;

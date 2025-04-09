@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, RequestHandler } from 'express';
 import {
   blockUser,
   unblockUser,
@@ -15,19 +15,19 @@ import { isAdmin } from '../middlewares/roles.ts';
 const router = Router();
 
 // Роуты для управления событиями
-router.post('/events/:id/approve', authMiddleware, isAdmin, approveEvent);
-router.post('/events/:id/reject', authMiddleware, isAdmin, rejectEvent);
+router.post('/events/:id/approve', authMiddleware as RequestHandler, isAdmin as RequestHandler, approveEvent as RequestHandler);
+router.post('/events/:id/reject', authMiddleware as RequestHandler, isAdmin as RequestHandler, rejectEvent as RequestHandler);
 
 // Роуты для управления пользователями
-router.patch('/users/:id/block', authMiddleware, isAdmin, blockUser);
-router.patch('/users/:id/unblock', authMiddleware, isAdmin, unblockUser);
+router.patch('/users/:id/block', authMiddleware as RequestHandler, isAdmin as RequestHandler, blockUser as RequestHandler);
+router.patch('/users/:id/unblock', authMiddleware as RequestHandler, isAdmin as RequestHandler, unblockUser as RequestHandler);
 
 // Роут для добавления фильтра
-router.post('/filters', authMiddleware, isAdmin, addFilter);
+router.post('/filters', authMiddleware as RequestHandler, isAdmin as RequestHandler, addFilter as RequestHandler);
 
 // Роуты для управления новостями
-router.post('/news', authMiddleware, isAdmin, createNews);
-router.put('/news/:id', authMiddleware, isAdmin, updateNews);
-router.delete('/news/:id', authMiddleware, isAdmin, deleteNews);
+router.post('/news', authMiddleware as RequestHandler, isAdmin as RequestHandler, createNews as RequestHandler);
+router.put('/news/:id', authMiddleware as RequestHandler, isAdmin as RequestHandler, updateNews as RequestHandler);
+router.delete('/news/:id', authMiddleware as RequestHandler, isAdmin as RequestHandler, deleteNews as RequestHandler);
 
 export default router;

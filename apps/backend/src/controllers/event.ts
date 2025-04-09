@@ -5,15 +5,29 @@ import { Types } from 'mongoose';
 
 export const createEvent = async (req: AuthRequest, res: Response) => {
   try {
-    const { title, description, date } = req.body;
+    const {
+      title,
+      shortDescription,
+      description,
+      organizerInfo,
+      imageUrl,
+      date,
+      startTime,
+      endTime,
+      location,
+      price,
+      discount,
+      maxParticipants,
+      isPrivate
+    } = req.body;
     const user = req.user;
 
     if (!user || !user._id) {
       return res.status(401).json({ message: 'Не авторизован' });
     }
 
-    if (!title || !description || !date) {
-      return res.status(400).json({ message: 'Необходимо указать заголовок, описание и дату события' });
+    if (!title || !shortDescription || !description || !organizerInfo || !date || !startTime || !endTime || !location || price === undefined || !maxParticipants) {
+      return res.status(400).json({ message: 'Не все обязательные поля заполнены' });
     }
 
     const eventDate = new Date(date);
@@ -23,8 +37,18 @@ export const createEvent = async (req: AuthRequest, res: Response) => {
 
     const event = new EventModel({
       title,
+      shortDescription,
       description,
+      organizerInfo,
+      imageUrl,
       date: eventDate,
+      startTime,
+      endTime,
+      location,
+      price,
+      discount: discount || 0,
+      maxParticipants,
+      isPrivate: isPrivate || false,
       creator: new Types.ObjectId(user._id.toString()),
       participants: [new Types.ObjectId(user._id.toString())],
       status: 'pending',
@@ -76,7 +100,22 @@ export const getEvent = async (req: AuthRequest, res: Response) => {
 
 export const updateEvent = async (req: AuthRequest, res: Response) => {
   try {
-    const { title, description, date, status } = req.body;
+    const {
+      title,
+      shortDescription,
+      description,
+      organizerInfo,
+      imageUrl,
+      date,
+      startTime,
+      endTime,
+      location,
+      price,
+      discount,
+      maxParticipants,
+      isPrivate,
+      status
+    } = req.body;
     const user = req.user;
 
     if (!user || !user._id) {
@@ -102,11 +141,19 @@ export const updateEvent = async (req: AuthRequest, res: Response) => {
       event.date = eventDate;
     }
 
-    event.title = title || event.title;
-    event.description = description || event.description;
-    if (user.role === 'Admin') {
-      event.status = status || event.status;
-    }
+    if (title) event.title = title;
+    if (shortDescription) event.shortDescription = shortDescription;
+    if (description) event.description = description;
+    if (organizerInfo) event.organizerInfo = organizerInfo;
+    if (imageUrl !== undefined) event.imageUrl = imageUrl;
+    if (startTime) event.startTime = startTime;
+    if (endTime) event.endTime = endTime;
+    if (location) event.location = location;
+    if (price !== undefined) event.price = price;
+    if (discount !== undefined) event.discount = discount;
+    if (maxParticipants) event.maxParticipants = maxParticipants;
+    if (isPrivate !== undefined) event.isPrivate = isPrivate;
+    if (user.role === 'Admin' && status) event.status = status;
 
     await event.save();
     res.json(event);
@@ -161,6 +208,10 @@ export const inviteToEvent = async (req: AuthRequest, res: Response) => {
       return res.status(403).json({ message: 'Нет прав для приглашения участников' });
     }
 
+    if (!event.isPrivate) {
+      return res.status(400).json({ message: 'Приглашения доступны только для закрытых событий' });
+    }
+
     const invitedUserId = new Types.ObjectId(userId);
     if (event.invitations.includes(invitedUserId)) {
       return res.status(400).json({ message: 'Пользователь уже приглашен' });
@@ -195,6 +246,10 @@ export const acceptInvitation = async (req: AuthRequest, res: Response) => {
 
     if (event.participants.includes(userId)) {
       return res.status(400).json({ message: 'Вы уже являетесь участником этого события' });
+    }
+
+    if (event.participants.length >= event.maxParticipants) {
+      return res.status(400).json({ message: 'Достигнуто максимальное количество участников' });
     }
 
     event.invitations = event.invitations.filter(
