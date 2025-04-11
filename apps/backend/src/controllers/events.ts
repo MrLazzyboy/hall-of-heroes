@@ -98,7 +98,9 @@ export const updateEvent = async (
     const event = await Event.findById(id);
     if (!event) throw new ApiError(404, 'Событие не найдено');
 
-    const userId = req.user?.userId ? new mongoose.Types.ObjectId(req.user.userId) : undefined;
+    const userId = req.user?.userId
+      ? new mongoose.Types.ObjectId(req.user.userId)
+      : undefined;
 
     if (!userId || !event.creator.equals(userId))
       throw new ApiError(403, 'Недостаточно прав');
@@ -125,8 +127,10 @@ export const deleteEvent = async (
     const event = await Event.findById(id);
     if (!event) throw new ApiError(404, 'Событие не найдено');
 
-    const userId = req.user?.userId ? new mongoose.Types.ObjectId(req.user.userId) : undefined;
-    
+    const userId = req.user?.userId
+      ? new mongoose.Types.ObjectId(req.user.userId)
+      : undefined;
+
     if (!userId || !event.creator.equals(userId))
       throw new ApiError(403, 'Недостаточно прав');
 

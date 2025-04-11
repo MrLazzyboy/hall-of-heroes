@@ -40,9 +40,7 @@ export const getFilters = async (
   try {
     const filters = await Filter.find();
     if (filters.length === 0) {
-      res
-        .status(200)
-        .json({ message: 'Нет доступных фильтров', filters: [] });
+      res.status(200).json({ message: 'Нет доступных фильтров', filters: [] });
       return;
     }
     res.status(200).json(filters);

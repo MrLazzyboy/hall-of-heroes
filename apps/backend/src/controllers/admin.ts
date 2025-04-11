@@ -215,10 +215,12 @@ export const getAllUsers = async (req: Request, res: Response) => {
       pagination: {
         total,
         page,
-        pages: Math.ceil(total / limit)
-      }
+        pages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка при получении списка пользователей' });
+    res
+      .status(500)
+      .json({ message: 'Ошибка при получении списка пользователей' });
   }
 };

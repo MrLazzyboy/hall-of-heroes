@@ -33,27 +33,27 @@ const UserSchema = new Schema<User>({
   events: [{ type: Schema.Types.ObjectId, ref: 'Event' }], // Добавляем поле events
   profile: {
     avatarUrl: { type: String },
-    bio: { type: String }
-  }
+    bio: { type: String },
+  },
 });
 
 // Добавляем виртуальные поля для событий
 UserSchema.virtual('createdEvents', {
   ref: 'Event',
   localField: '_id',
-  foreignField: 'creator'
+  foreignField: 'creator',
 });
 
 UserSchema.virtual('participatingEvents', {
   ref: 'Event',
   localField: '_id',
-  foreignField: 'participants'
+  foreignField: 'participants',
 });
 
 UserSchema.virtual('invitedEvents', {
   ref: 'Event',
   localField: '_id',
-  foreignField: 'invitations'
+  foreignField: 'invitations',
 });
 
 // Включаем виртуальные поля при преобразовании в JSON

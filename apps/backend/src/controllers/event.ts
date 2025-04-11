@@ -18,7 +18,7 @@ export const createEvent = async (req: AuthRequest, res: Response) => {
       price,
       discount,
       maxParticipants,
-      isPrivate
+      isPrivate,
     } = req.body;
     const user = req.user;
 
@@ -26,8 +26,21 @@ export const createEvent = async (req: AuthRequest, res: Response) => {
       return res.status(401).json({ message: 'Не авторизован' });
     }
 
-    if (!title || !shortDescription || !description || !organizerInfo || !date || !startTime || !endTime || !location || price === undefined || !maxParticipants) {
-      return res.status(400).json({ message: 'Не все обязательные поля заполнены' });
+    if (
+      !title ||
+      !shortDescription ||
+      !description ||
+      !organizerInfo ||
+      !date ||
+      !startTime ||
+      !endTime ||
+      !location ||
+      price === undefined ||
+      !maxParticipants
+    ) {
+      return res
+        .status(400)
+        .json({ message: 'Не все обязательные поля заполнены' });
     }
 
     const eventDate = new Date(date);
@@ -114,7 +127,7 @@ export const updateEvent = async (req: AuthRequest, res: Response) => {
       discount,
       maxParticipants,
       isPrivate,
-      status
+      status,
     } = req.body;
     const user = req.user;
 
@@ -129,8 +142,13 @@ export const updateEvent = async (req: AuthRequest, res: Response) => {
     }
 
     const userId = new Types.ObjectId(user._id.toString());
-    if (event.creator.toString() !== userId.toString() && user.role !== 'Admin') {
-      return res.status(403).json({ message: 'Нет прав для редактирования события' });
+    if (
+      event.creator.toString() !== userId.toString() &&
+      user.role !== 'Admin'
+    ) {
+      return res
+        .status(403)
+        .json({ message: 'Нет прав для редактирования события' });
     }
 
     if (date) {
@@ -177,7 +195,10 @@ export const deleteEvent = async (req: AuthRequest, res: Response) => {
     }
 
     const userId = new Types.ObjectId(user._id.toString());
-    if (event.creator.toString() !== userId.toString() && user.role !== 'Admin') {
+    if (
+      event.creator.toString() !== userId.toString() &&
+      user.role !== 'Admin'
+    ) {
       return res.status(403).json({ message: 'Нет прав для удаления события' });
     }
 
@@ -205,11 +226,15 @@ export const inviteToEvent = async (req: AuthRequest, res: Response) => {
 
     const creatorId = new Types.ObjectId(user._id.toString());
     if (event.creator.toString() !== creatorId.toString()) {
-      return res.status(403).json({ message: 'Нет прав для приглашения участников' });
+      return res
+        .status(403)
+        .json({ message: 'Нет прав для приглашения участников' });
     }
 
     if (!event.isPrivate) {
-      return res.status(400).json({ message: 'Приглашения доступны только для закрытых событий' });
+      return res
+        .status(400)
+        .json({ message: 'Приглашения доступны только для закрытых событий' });
     }
 
     const invitedUserId = new Types.ObjectId(userId);
@@ -241,15 +266,21 @@ export const acceptInvitation = async (req: AuthRequest, res: Response) => {
 
     const userId = new Types.ObjectId(user._id.toString());
     if (!event.invitations.includes(userId)) {
-      return res.status(400).json({ message: 'Вы не приглашены на это событие' });
+      return res
+        .status(400)
+        .json({ message: 'Вы не приглашены на это событие' });
     }
 
     if (event.participants.includes(userId)) {
-      return res.status(400).json({ message: 'Вы уже являетесь участником этого события' });
+      return res
+        .status(400)
+        .json({ message: 'Вы уже являетесь участником этого события' });
     }
 
     if (event.participants.length >= event.maxParticipants) {
-      return res.status(400).json({ message: 'Достигнуто максимальное количество участников' });
+      return res
+        .status(400)
+        .json({ message: 'Достигнуто максимальное количество участников' });
     }
 
     event.invitations = event.invitations.filter(
@@ -279,7 +310,9 @@ export const rejectInvitation = async (req: AuthRequest, res: Response) => {
 
     const userId = new Types.ObjectId(user._id.toString());
     if (!event.invitations.includes(userId)) {
-      return res.status(400).json({ message: 'Вы не приглашены на это событие' });
+      return res
+        .status(400)
+        .json({ message: 'Вы не приглашены на это событие' });
     }
 
     event.invitations = event.invitations.filter(
@@ -290,4 +323,38 @@ export const rejectInvitation = async (req: AuthRequest, res: Response) => {
   } catch (error) {
     res.status(500).json({ message: 'Ошибка при отклонении приглашения' });
   }
-}; 
+};
+
+export const getAllPublicEvents = async (req: Request, res: Response) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const skip = (page - 1) * limit;
+
+    const query = {
+      isPrivate: false,
+      status: 'approved',
+    };
+
+    const [events, total] = await Promise.all([
+      EventModel.find(query)
+        .populate('creator', 'username')
+        .select('-invitations')
+        .skip(skip)
+        .limit(limit)
+        .sort({ date: 1 }),
+      EventModel.countDocuments(query),
+    ]);
+
+    res.json({
+      events,
+      pagination: {
+        total,
+        page,
+        pages: Math.ceil(total / limit),
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Ошибка при получении списка событий' });
+  }
+};
