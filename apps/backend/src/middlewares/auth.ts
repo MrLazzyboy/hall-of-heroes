@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import { AuthRequest } from '../types/auth.ts';
 import { ApiError } from './errorHandler.ts';
+import User from '../models/auth.ts';
 
 if (!process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET не установлен в .env');
@@ -25,10 +26,15 @@ export const authMiddleware = async (
     }
 
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
-    req.user = { userId: new mongoose.Types.ObjectId(decoded.userId) };
+    const user = await User.findById(decoded.userId);
+    
+    if (!user) {
+      throw new ApiError(401, 'Пользователь не найден');
+    }
 
-    next(); // Пропускаем к следующему middleware
+    req.user = user;
+    next();
   } catch (error) {
-    next(error); // Передаем ошибку обработчику ошибок
+    next(error);
   }
 };

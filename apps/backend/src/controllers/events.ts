@@ -30,9 +30,9 @@ export const createEvent = async (
   try {
     const { title, description, date, invitations } = req.body;
 
-    if (!req.user?.userId) throw new ApiError(401, 'Необходима авторизация');
+    if (!req.user?._id) throw new ApiError(401, 'Необходима авторизация');
 
-    const creatorId = new mongoose.Types.ObjectId(req.user.userId); // Конвертируем userId
+    const creatorId = new mongoose.Types.ObjectId(req.user._id.toString());
 
     const newEvent = new Event({
       title,
@@ -64,15 +64,12 @@ export const getEventById = async (
     const event = await Event.findById(id).populate('creator', 'username');
     if (!event) throw new ApiError(404, 'Событие не найдено');
 
-    // Проверяем, авторизован ли пользователь
-    if (!req.user?.userId) {
+    if (!req.user?._id) {
       throw new ApiError(401, 'Необходима авторизация');
     }
 
-    // Конвертируем userId в ObjectId
-    const userId = new mongoose.Types.ObjectId(req.user.userId);
+    const userId = new mongoose.Types.ObjectId(req.user._id.toString());
 
-    // Проверяем, имеет ли пользователь доступ к событию
     if (
       !event.participants.some((participant) => participant.equals(userId)) &&
       !event.creator.equals(userId)
@@ -98,8 +95,8 @@ export const updateEvent = async (
     const event = await Event.findById(id);
     if (!event) throw new ApiError(404, 'Событие не найдено');
 
-    const userId = req.user?.userId
-      ? new mongoose.Types.ObjectId(req.user.userId)
+    const userId = req.user?._id
+      ? new mongoose.Types.ObjectId(req.user._id.toString())
       : undefined;
 
     if (!userId || !event.creator.equals(userId))
@@ -127,8 +124,8 @@ export const deleteEvent = async (
     const event = await Event.findById(id);
     if (!event) throw new ApiError(404, 'Событие не найдено');
 
-    const userId = req.user?.userId
-      ? new mongoose.Types.ObjectId(req.user.userId)
+    const userId = req.user?._id
+      ? new mongoose.Types.ObjectId(req.user._id.toString())
       : undefined;
 
     if (!userId || !event.creator.equals(userId))
@@ -163,9 +160,9 @@ export const respondToInvitation = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    if (!req.user?.userId) throw new ApiError(401, 'Необходима авторизация');
+    if (!req.user?._id) throw new ApiError(401, 'Необходима авторизация');
 
-    const userId = new mongoose.Types.ObjectId(req.user.userId); // Конвертация userId
+    const userId = new mongoose.Types.ObjectId(req.user._id.toString());
     const { id } = req.params;
     const { status } = req.body;
 
