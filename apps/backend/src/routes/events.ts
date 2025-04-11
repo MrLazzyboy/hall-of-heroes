@@ -9,6 +9,7 @@ import {
   acceptInvitation,
   rejectInvitation,
   getAllPublicEvents,
+  applyForEvent,
 } from '../controllers/event';
 import { authMiddleware } from '../middlewares/auth';
 
@@ -68,5 +69,8 @@ router.post(
   authMiddleware as RequestHandler,
   rejectInvitation as RequestHandler
 );
+
+// Отправка заявки на участие в событии
+router.post('/:id/apply', authMiddleware as RequestHandler, applyForEvent as RequestHandler);
 
 export default router;

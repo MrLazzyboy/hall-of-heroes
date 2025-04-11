@@ -327,34 +327,73 @@ export const rejectInvitation = async (req: AuthRequest, res: Response) => {
 
 export const getAllPublicEvents = async (req: Request, res: Response) => {
   try {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
-    const skip = (page - 1) * limit;
+    const { page = 1, limit = 10, dateFrom, dateTill } = req.query;
+    const query: any = { isPrivate: false };
 
-    const query = {
-      isPrivate: false,
-      status: 'approved',
-    };
+    if (dateFrom || dateTill) {
+      query.date = {};
+      if (dateFrom) {
+        query.date.$gte = new Date(dateFrom as string);
+      }
+      if (dateTill) {
+        query.date.$lte = new Date(dateTill as string);
+      }
+    }
 
-    const [events, total] = await Promise.all([
-      EventModel.find(query)
-        .populate('creator', 'username')
-        .select('-invitations')
-        .skip(skip)
-        .limit(limit)
-        .sort({ date: 1 }),
-      EventModel.countDocuments(query),
-    ]);
+    const events = await EventModel.find(query)
+      .skip((+page - 1) * +limit)
+      .limit(+limit)
+      .populate('creator participants');
 
-    res.json({
-      events,
-      pagination: {
-        total,
-        page,
-        pages: Math.ceil(total / limit),
-      },
-    });
+    res.json(events);
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка при получении списка событий' });
+    res.status(500).json({ message: 'Ошибка при получении публичных событий' });
+  }
+};
+
+export const applyForEvent = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    const { id } = req.params;
+
+    if (!user || !user._id) {
+      return res.status(401).json({ message: 'Не авторизован' });
+    }
+
+    const event = await EventModel.findById(id);
+    if (!event) {
+      return res.status(404).json({ message: 'Событие не найдено' });
+    }
+
+    const userId = new Types.ObjectId(user._id.toString());
+
+    // Проверяем, не является ли пользователь уже участником
+    if (event.participants.some(p => p.equals(userId))) {
+      return res.status(400).json({ message: 'Вы уже являетесь участником этого события' });
+    }
+
+    // Проверяем, не отправлял ли пользователь уже заявку
+    if (event.invitations.some(i => i.equals(userId))) {
+      return res.status(400).json({ message: 'Вы уже отправили заявку на участие' });
+    }
+
+    // Проверяем, не достигнуто ли максимальное количество участников
+    if (event.participants.length >= event.maxParticipants) {
+      return res.status(400).json({ message: 'Достигнуто максимальное количество участников' });
+    }
+
+    // Для публичных событий сразу добавляем в участники
+    if (!event.isPrivate) {
+      event.participants.push(userId);
+      await event.save();
+      return res.json({ message: 'Вы успешно присоединились к событию' });
+    }
+
+    // Для приватных событий добавляем в список заявок
+    event.invitations.push(userId);
+    await event.save();
+    res.json({ message: 'Заявка на участие отправлена' });
+  } catch (error) {
+    res.status(500).json({ message: 'Ошибка при отправке заявки на участие' });
   }
 };

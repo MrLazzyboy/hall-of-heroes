@@ -11,8 +11,20 @@ export const getAllEvents = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { page = 1, limit = 10 } = req.query;
-    const events = await Event.find()
+    const { page = 1, limit = 10, dateFrom, dateTill } = req.query;
+    const query: any = {};
+
+    if (dateFrom || dateTill) {
+      query.date = {};
+      if (dateFrom) {
+        query.date.$gte = new Date(dateFrom as string);
+      }
+      if (dateTill) {
+        query.date.$lte = new Date(dateTill as string);
+      }
+    }
+
+    const events = await Event.find(query)
       .skip((+page - 1) * +limit)
       .limit(+limit);
     res.status(200).json({ events });
