@@ -3,6 +3,8 @@ import { AuthRequest } from '../types/auth.ts';
 import User from '../models/auth.ts';
 import Notification from '../models/notification.ts';
 import { ApiError } from '../middlewares/errorHandler.ts';
+import path from 'path';
+import fs from 'fs';
 
 export const getCurrentUser = async (
   req: AuthRequest,
@@ -10,7 +12,7 @@ export const getCurrentUser = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const user = await User.findById(req.user?.userId).populate('events');
+    const user = await User.findById(req.user?._id).populate('events');
     if (!user) throw new ApiError(404, 'Пользователь не найден');
 
     res.status(200).json(user);
@@ -26,7 +28,7 @@ export const updateCurrentUser = async (
 ): Promise<void> => {
   try {
     const { username, profile } = req.body;
-    const user = await User.findById(req.user?.userId);
+    const user = await User.findById(req.user?._id);
     if (!user) throw new ApiError(404, 'Пользователь не найден');
 
     if (username) user.username = username;
@@ -45,10 +47,10 @@ export const deleteCurrentUser = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const user = await User.findByIdAndDelete(req.user?.userId);
+    const user = await User.findByIdAndDelete(req.user?._id);
     if (!user) throw new ApiError(404, 'Пользователь не найден');
 
-    res.status(200).json({ message: 'Аккаунт удален' });
+    res.status(200).json({ message: 'Пользователь удален' });
   } catch (error) {
     next(error);
   }
@@ -61,9 +63,7 @@ export const getUserById = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const user = await User.findById(id).select(
-      'username profile.avatarUrl profile.bio'
-    );
+    const user = await User.findById(id).populate('events');
     if (!user) throw new ApiError(404, 'Пользователь не найден');
 
     res.status(200).json(user);
@@ -78,8 +78,11 @@ export const getUserNotifications = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const notifications = await Notification.find({ userId: req.user?.userId });
-    res.status(200).json({ notifications });
+    const notifications = await Notification.find({
+      user: req.user?._id,
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json(notifications);
   } catch (error) {
     next(error);
   }
@@ -91,18 +94,21 @@ export const uploadAvatar = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    if (!req.file) throw new ApiError(400, 'Файл не загружен');
-
-    const user = await User.findById(req.user?.userId);
+    const user = await User.findById(req.user?._id);
     if (!user) throw new ApiError(404, 'Пользователь не найден');
 
-    if (!user.profile) user.profile = {};
+    if (!req.file) throw new ApiError(400, 'Файл не загружен');
+
+    // Проверяем, существует ли директория для загрузки
+    const uploadDir = path.join(__dirname, '../../uploads');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
     user.profile.avatarUrl = `/uploads/${req.file.filename}`;
     await user.save();
 
-    res
-      .status(200)
-      .json({ message: 'Аватар загружен', avatarUrl: user.profile.avatarUrl });
+    res.status(200).json({ message: 'Аватар обновлен', user });
   } catch (error) {
     next(error);
   }

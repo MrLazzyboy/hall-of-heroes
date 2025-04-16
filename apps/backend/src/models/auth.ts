@@ -4,6 +4,7 @@ import { IEvent } from './event';
 export interface User extends Document {
   username: string;
   email: string;
+  phone: string;
   password: string;
   role: 'Player' | 'Admin'; // Основная роль
   roles: string[]; // Дополнительные роли (например, Master)
@@ -24,6 +25,7 @@ export interface User extends Document {
 const UserSchema = new Schema<User>({
   username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  phone: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, enum: ['Player', 'Admin'], default: 'Player' },
   roles: { type: [String], default: [] }, // Для дополнительных ролей

@@ -27,8 +27,26 @@ const EventSchema = new Schema<IEvent>({
   organizerInfo: { type: String, required: true },
   imageUrl: { type: String },
   date: { type: Date, required: true },
-  startTime: { type: String, required: true },
-  endTime: { type: String, required: true },
+  startTime: { 
+    type: String, 
+    required: true,
+    validate: {
+      validator: function(v: string) {
+        return /^([01]\d|2[0-3]):([0-5]\d)$/.test(v);
+      },
+      message: 'Неверный формат времени (HH:mm)'
+    }
+  },
+  endTime: { 
+    type: String, 
+    required: true,
+    validate: {
+      validator: function(v: string) {
+        return /^([01]\d|2[0-3]):([0-5]\d)$/.test(v);
+      },
+      message: 'Неверный формат времени (HH:mm)'
+    }
+  },
   location: { type: String, required: true },
   price: { type: Number, required: true, min: 0 },
   discount: { type: Number, required: true, min: 0, max: 100, default: 0 },
@@ -36,7 +54,7 @@ const EventSchema = new Schema<IEvent>({
   isPrivate: { type: Boolean, required: true, default: false },
   status: {
     type: String,
-    enum: ['approved', 'archived', 'rejected', 'pending'],
+    enum: ['approved', 'archived', 'pending', 'rejected'],
     default: 'pending',
   },
   creator: { type: Schema.Types.ObjectId, ref: 'User', required: true },
