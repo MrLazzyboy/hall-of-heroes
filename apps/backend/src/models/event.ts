@@ -5,6 +5,13 @@ export interface IEvent extends Document {
   shortDescription: string;
   description: string;
   organizerInfo: string;
+  format: string;
+  system: string;
+  setting: string;
+  duration: string;
+  playerExperience: string;
+  genre: string;
+  characterLevel: string;
   imageUrl?: string;
   date: Date;
   startTime: string;
@@ -14,17 +21,52 @@ export interface IEvent extends Document {
   discount: number;
   maxParticipants: number;
   isPrivate: boolean;
-  status: 'approved' | 'archived' | 'pending' | 'rejected';
+  status: 'approved' | 'archived' | 'pending' | 'rejected' | 'closed';
   creator: mongoose.Types.ObjectId;
   participants: mongoose.Types.ObjectId[];
   invitations: mongoose.Types.ObjectId[];
+  master: mongoose.Types.ObjectId;
 }
 
 const EventSchema = new Schema<IEvent>({
   title: { type: String, required: true },
   shortDescription: { type: String, required: true },
   description: { type: String, required: true },
-  organizerInfo: { type: String, required: true },
+  organizerInfo: { type: String },
+  format: { 
+    type: String, 
+    required: true,
+    enum: ['Игровая сессия', 'Мероприятие']
+  },
+  master: { 
+    type: Schema.Types.ObjectId, 
+    ref: 'User',
+    required: function() { return this.format === 'Игровая сессия'; }
+  },
+  system: { 
+    type: String,
+    required: function() { return this.format === 'Игровая сессия'; }
+  },
+  setting: { 
+    type: String,
+    required: function() { return this.format === 'Игровая сессия'; }
+  },
+  duration: { 
+    type: String,
+    required: function() { return this.format === 'Игровая сессия'; }
+  },
+  playerExperience: { 
+    type: String,
+    required: function() { return this.format === 'Игровая сессия'; }
+  },
+  genre: { 
+    type: String,
+    required: function() { return this.format === 'Игровая сессия'; }
+  },
+  characterLevel: { 
+    type: String,
+    required: function() { return this.format === 'Игровая сессия'; }
+  },
   imageUrl: { type: String },
   date: { type: Date, required: true },
   startTime: { 
@@ -54,7 +96,7 @@ const EventSchema = new Schema<IEvent>({
   isPrivate: { type: Boolean, required: true, default: false },
   status: {
     type: String,
-    enum: ['approved', 'archived', 'pending', 'rejected'],
+    enum: ['approved', 'archived', 'pending', 'rejected', 'closed'],
     default: 'pending',
   },
   creator: { type: Schema.Types.ObjectId, ref: 'User', required: true },

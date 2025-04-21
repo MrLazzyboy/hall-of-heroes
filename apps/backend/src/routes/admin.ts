@@ -1,47 +1,36 @@
 import { Router, RequestHandler } from 'express';
 import {
+  getAllUsers,
   blockUser,
   unblockUser,
-  addFilter,
-  createNews,
-  updateNews,
-  deleteNews,
   approveEvent,
   rejectEvent,
-  getAllUsers,
-} from '../controllers/admin.ts';
-import { authMiddleware } from '../middlewares/auth.ts';
-import { isAdmin } from '../middlewares/roles.ts';
+  createNews,
+  updateNews,
+  deleteNews
+} from '../controllers/admin';
+import { authMiddleware } from '../middlewares/auth';
+import { isAdmin } from '../middlewares/roles';
 
 const router = Router();
 
-// Роуты для управления событиями
-router.post(
-  '/events/:id/approve',
-  authMiddleware as RequestHandler,
-  isAdmin as RequestHandler,
-  approveEvent as RequestHandler
-);
-router.post(
-  '/events/:id/reject',
-  authMiddleware as RequestHandler,
-  isAdmin as RequestHandler,
-  rejectEvent as RequestHandler
-);
-
-// Роуты для управления пользователями
+// Получение всех пользователей
 router.get(
   '/users',
   authMiddleware as RequestHandler,
   isAdmin as RequestHandler,
   getAllUsers as RequestHandler
 );
+
+// Блокировка пользователя
 router.patch(
   '/users/:id/block',
   authMiddleware as RequestHandler,
   isAdmin as RequestHandler,
   blockUser as RequestHandler
 );
+
+// Разблокировка пользователя
 router.patch(
   '/users/:id/unblock',
   authMiddleware as RequestHandler,
@@ -49,27 +38,39 @@ router.patch(
   unblockUser as RequestHandler
 );
 
-// Роут для добавления фильтра
+// Одобрение события
 router.post(
-  '/filters',
+  '/events/:id/approve',
   authMiddleware as RequestHandler,
   isAdmin as RequestHandler,
-  addFilter as RequestHandler
+  approveEvent as RequestHandler
 );
 
-// Роуты для управления новостями
+// Отклонение события
+router.post(
+  '/events/:id/reject',
+  authMiddleware as RequestHandler,
+  isAdmin as RequestHandler,
+  rejectEvent as RequestHandler
+);
+
+// Создание новости
 router.post(
   '/news',
   authMiddleware as RequestHandler,
   isAdmin as RequestHandler,
   createNews as RequestHandler
 );
+
+// Обновление новости
 router.put(
   '/news/:id',
   authMiddleware as RequestHandler,
   isAdmin as RequestHandler,
   updateNews as RequestHandler
 );
+
+// Удаление новости
 router.delete(
   '/news/:id',
   authMiddleware as RequestHandler,

@@ -19,6 +19,7 @@ import commonRoutes from './routes/common.ts';
 import userRoutes from './routes/user.ts';
 import eventsRoutes from './routes/events.ts';
 import adminRoutes from './routes/admin.ts';
+import uploadRouter from './routes/upload.ts';
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -55,6 +56,9 @@ app.use('/admin', adminRoutes);
 
 // События
 app.use('/events', eventsRoutes);
+
+// Загрузка файлов
+app.use('/upload', uploadRouter);
 
 // Обработчик ошибок
 app.use(errorHandler);

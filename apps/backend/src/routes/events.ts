@@ -1,38 +1,29 @@
 import { Router, RequestHandler } from 'express';
 import {
   createEvent,
-  getEvents,
-  getEvent,
   updateEvent,
   deleteEvent,
-  inviteToEvent,
-  acceptInvitation,
-  rejectInvitation,
+  getEvent,
+  getEvents,
   getAllPublicEvents,
   applyForEvent,
+  searchUsers,
+  approvePlayer,
+  rejectPlayer,
+  closeRegistration,
+  getEventApplications,
+  openRegistration
 } from '../controllers/event';
 import { authMiddleware } from '../middlewares/auth';
+import { isMaster } from '../middlewares/roles';
 
 const router = Router();
 
-// Получение всех публичных событий (без авторизации)
-router.get('/all', getAllPublicEvents as RequestHandler);
-
-// Получение всех событий пользователя
-router.get('/', authMiddleware as RequestHandler, getEvents as RequestHandler);
-
-// Создание нового события
+// Создание события
 router.post(
   '/',
   authMiddleware as RequestHandler,
   createEvent as RequestHandler
-);
-
-// Получение конкретного события
-router.get(
-  '/:id',
-  authMiddleware as RequestHandler,
-  getEvent as RequestHandler
 );
 
 // Обновление события
@@ -49,28 +40,77 @@ router.delete(
   deleteEvent as RequestHandler
 );
 
-// Приглашение пользователя на событие
-router.post(
-  '/:id/invite',
-  authMiddleware as RequestHandler,
-  inviteToEvent as RequestHandler
+// Получение события по ID
+router.get(
+  '/:id',
+  getEvent as RequestHandler
 );
 
-// Принятие приглашения
-router.post(
-  '/:id/accept',
+// Получение событий пользователя
+router.get(
+  '/',
   authMiddleware as RequestHandler,
-  acceptInvitation as RequestHandler
+  getEvents as RequestHandler
 );
 
-// Отклонение приглашения
-router.post(
-  '/:id/reject',
-  authMiddleware as RequestHandler,
-  rejectInvitation as RequestHandler
+// Получение всех публичных событий
+router.get(
+  '/all',
+  getAllPublicEvents as RequestHandler
 );
 
-// Отправка заявки на участие в событии
-router.post('/:id/apply', authMiddleware as RequestHandler, applyForEvent as RequestHandler);
+// Подача заявки на участие в событии
+router.post(
+  '/:id/apply',
+  authMiddleware as RequestHandler,
+  applyForEvent as RequestHandler
+);
+
+// Поиск пользователей
+router.get(
+  '/search/users',
+  authMiddleware as RequestHandler,
+  searchUsers as RequestHandler
+);
+
+// Получение списка заявок на событие (для мастера)
+router.get(
+  '/:id/applications',
+  authMiddleware as RequestHandler,
+  isMaster as RequestHandler,
+  getEventApplications as RequestHandler
+);
+
+// Одобрение игрока (для мастера)
+router.post(
+  '/:id/approve-player',
+  authMiddleware as RequestHandler,
+  isMaster as RequestHandler,
+  approvePlayer as RequestHandler
+);
+
+// Отклонение игрока (для мастера)
+router.post(
+  '/:id/reject-player',
+  authMiddleware as RequestHandler,
+  isMaster as RequestHandler,
+  rejectPlayer as RequestHandler
+);
+
+// Закрытие записи (для мастера)
+router.post(
+  '/:id/close-registration',
+  authMiddleware as RequestHandler,
+  isMaster as RequestHandler,
+  closeRegistration as RequestHandler
+);
+
+// Открытие записи (для мастера)
+router.post(
+  '/:id/open-registration',
+  authMiddleware as RequestHandler,
+  isMaster as RequestHandler,
+  openRegistration as RequestHandler
+);
 
 export default router;

@@ -73,13 +73,109 @@ docker run -d -p 27017:27017 --name mongodb mongo:latest
 #### События
 - `GET /events` - Получение всех событий пользователя (где он создатель, участник или приглашенный)
 - `GET /events/:id` - Получение информации о конкретном событии
+  ```json
+  Ответ:
+  {
+    "id": "string",
+    "title": "string",
+    "shortDescription": "string",
+    "description": "string",
+    "organizerInfo": "string",
+    "format": "string (Игровая сессия | Мероприятие)",
+    "imageUrl": "string",
+    "date": "string (ISO date)",
+    "startTime": "string (HH:mm)",
+    "endTime": "string (HH:mm)",
+    "location": "string",
+    "price": "number",
+    "discount": "number",
+    "maxParticipants": "number",
+    "currentParticipants": "number",
+    "isPrivate": "boolean",
+    "status": "string (approved | archived | pending | rejected)",
+    "creator": {
+      "username": "string",
+      "email": "string"
+    },
+    "participants": [
+      {
+        "username": "string",
+        "email": "string"
+      }
+    ],
+    "invitations": [
+      {
+        "username": "string",
+        "email": "string"
+      }
+    ],
+    // Дополнительные поля для формата "Игровая сессия"
+    "system": "string",
+    "setting": "string",
+    "duration": "string",
+    "playerExperience": "string",
+    "genre": "string",
+    "characterLevel": "string",
+    // Мета-информация о правах доступа текущего пользователя
+    "userAccess": {
+      "isCreator": "boolean",
+      "isParticipant": "boolean",
+      "isInvited": "boolean",
+      "canEdit": "boolean",
+      "canInvite": "boolean",
+      "canJoin": "boolean"
+    }
+  }
+  ```
+- `GET /events/masters/search` - Поиск мастеров по никнейму
+  ```
+  Query параметры:
+  - nickname: string (обязательный) - Никнейм для поиска
+
+  Ответ:
+  [
+    {
+      "id": "string",
+      "username": "string",
+      "email": "string",
+      "avatar": "string",
+      "rating": "number"
+    }
+  ]
+  ```
+- `GET /events/users/search` - Поиск пользователей
+  ```
+  Query параметры:
+  - query: string (обязательный) - Строка для поиска по никнейму
+  - role: string (опционально) - Фильтр по роли пользователя (например, 'Master')
+
+  Ответ:
+  [
+    {
+      "id": "string",
+      "username": "string",
+      "email": "string",
+      "avatar": "string",
+      "rating": "number",
+      "role": "string"
+    }
+  ]
+  ```
 - `POST /events` - Создание нового события
   ```json
   {
     "title": "string",
     "shortDescription": "string",
     "description": "string",
-    "organizerInfo": "string",
+    "organizerInfo": "string (optional)",
+    "format": "string (enum: ['Игровая сессия', 'Мероприятие'])",
+    "master": "string (ID мастера, required для Игровой сессии)",
+    "system": "string (required для Игровой сессии)",
+    "setting": "string (required для Игровой сессии)",
+    "duration": "string (required для Игровой сессии)",
+    "playerExperience": "string (required для Игровой сессии)",
+    "genre": "string (required для Игровой сессии)",
+    "characterLevel": "string (required для Игровой сессии)",
     "imageUrl": "string (optional)",
     "date": "string (ISO date)",
     "startTime": "string (HH:mm)",
@@ -98,6 +194,13 @@ docker run -d -p 27017:27017 --name mongodb mongo:latest
     "shortDescription": "string (optional)",
     "description": "string (optional)",
     "organizerInfo": "string (optional)",
+    "format": "string (enum: ['Игровая сессия', 'Мероприятие'], optional)",
+    "system": "string (optional)",
+    "setting": "string (optional)",
+    "duration": "string (optional)",
+    "playerExperience": "string (optional)",
+    "genre": "string (optional)",
+    "characterLevel": "string (optional)",
     "imageUrl": "string (optional)",
     "date": "string (ISO date, optional)",
     "startTime": "string (HH:mm, optional)",

@@ -139,14 +139,16 @@ export const createNews = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { title, content, publishDate } = req.body;
-    if (!title || !content)
-      throw new ApiError(400, 'Заголовок и текст новости обязательны');
+    const { title, shortDescription, content, imageUrl } = req.body;
+    if (!title || !shortDescription || !content)
+      throw new ApiError(400, 'Заголовок, краткое описание и текст новости обязательны');
 
     const news = new News({
       title,
+      shortDescription,
       content,
-      publishDate: publishDate || new Date(),
+      imageUrl,
+      publishDate: new Date(),
     });
     await news.save();
 
@@ -165,13 +167,14 @@ export const updateNews = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const { title, content, publishDate } = req.body;
+    const { title, shortDescription, content, imageUrl } = req.body;
     const news = await News.findById(id);
     if (!news) throw new ApiError(404, 'Новость не найдена');
 
     if (title) news.title = title;
+    if (shortDescription) news.shortDescription = shortDescription;
     if (content) news.content = content;
-    if (publishDate) news.publishDate = publishDate;
+    if (imageUrl) news.imageUrl = imageUrl;
     await news.save();
 
     res.status(200).json({ message: 'Новость успешно обновлена' });
@@ -200,15 +203,26 @@ export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
+    const role = req.query.role as string;
     const skip = (page - 1) * limit;
 
-    const users = await User.find({})
+    // Формируем условия поиска
+    const query: any = {};
+    if (role) {
+      // Проверяем основную роль или наличие роли в массиве дополнительных ролей
+      query.$or = [
+        { role: role },
+        { roles: role }
+      ];
+    }
+
+    const users = await User.find(query)
       .select('-password') // Исключаем пароль из результатов
       .skip(skip)
       .limit(limit)
       .lean();
 
-    const total = await User.countDocuments();
+    const total = await User.countDocuments(query);
 
     res.json({
       users,
