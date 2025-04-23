@@ -129,11 +129,11 @@ export const updateRole = async (
   next: NextFunction
 ) => {
   try {
-    const { userId, role } = req.body;
-    if (!userId || !['Player', 'Master'].includes(role)) {
+    const { _id, role } = req.body;
+    if (!_id || !['Player', 'Master'].includes(role)) {
       throw new ApiError(400, 'Некорректные данные');
     }
-    const user = await User.findById(userId);
+    const user = await User.findById(_id);
     if (!user) {
       throw new ApiError(404, 'Пользователь не найден');
     }
