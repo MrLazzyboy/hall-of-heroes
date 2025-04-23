@@ -9,7 +9,7 @@ export const isAdmin = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const user = await User.findById(req.user?.userId);
+    const user = await User.findById(req.user?._id);
     if (!user) {
       throw new ApiError(404, 'Пользователь не найден');
     }
@@ -28,7 +28,7 @@ export const isMaster = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const user = await User.findById(req.user?.userId);
+    const user = await User.findById(req.user?._id);
     if (!user || !user.roles.includes('Master')) {
       throw new ApiError(403, 'Доступ запрещен');
     }

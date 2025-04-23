@@ -229,14 +229,13 @@ export const getAllUsers = async (
       .limit(limit)
       .lean();
 
-    if (!users.length) {
-      throw new ApiError(404, 'Пользователи не найдены');
-    }
-
     const total = await User.countDocuments(query);
 
     res.json({
-      users,
+      users: users.map(user => ({
+        ...user,
+        id: user._id // Добавляем id для совместимости с фронтендом
+      })),
       pagination: {
         total,
         page,

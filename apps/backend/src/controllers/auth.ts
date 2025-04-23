@@ -13,6 +13,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/auth.ts';
 import { ApiError } from '../middlewares/errorHandler.ts';
+import mongoose from 'mongoose';
 
 if (!process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET не установлен в .env');
@@ -55,12 +56,12 @@ export const register = async (
     await newUser.save();
 
     // Автоматический логин после регистрации
-    const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, {
+    const token = jwt.sign({ _id: (newUser._id as mongoose.Types.ObjectId).toString() }, JWT_SECRET, {
       expiresIn: '7d',
     });
     res.status(201).json({
       message: 'Пользователь зарегистрирован',
-      userId: newUser._id,
+      _id: newUser._id,
       token,
     });
   } catch (error) {
@@ -82,7 +83,7 @@ export const login = async (
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new ApiError(401, 'Неверные учетные данные');
     }
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
+    const token = jwt.sign({ _id: (user._id as mongoose.Types.ObjectId).toString() }, JWT_SECRET, {
       expiresIn: '7d',
     });
     res.status(200).json({ message: 'Успешная авторизация', token });
@@ -113,10 +114,10 @@ export const session = async (
     if (!token) {
       throw new ApiError(401, 'Токен отсутствует');
     }
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+    const decoded = jwt.verify(token, JWT_SECRET) as { _id: string };
     res
       .status(200)
-      .json({ message: 'Сессия действительна', userId: decoded.userId });
+      .json({ message: 'Сессия действительна', _id: decoded._id });
   } catch (error) {
     next(error);
   }
