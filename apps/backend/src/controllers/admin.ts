@@ -66,7 +66,7 @@ export const blockUser = async (
     const { id } = req.params;
     const { reason, duration } = req.body;
     const user = await User.findById(id);
-    if (!user) throw new ApiError(404, 'Пользователь не найден');
+    if (!user) throw new ApiError(404, 'Пользователь не найден blockUser');
 
     user.isBlocked = true;
     user.blockUntil = duration ? new Date(Date.now() + duration * 1000) : null;
@@ -92,7 +92,7 @@ export const unblockUser = async (
   try {
     const { id } = req.params;
     const user = await User.findById(id);
-    if (!user) throw new ApiError(404, 'Пользователь не найден');
+    if (!user) throw new ApiError(404, 'Пользователь не найден unblockUser');
 
     user.isBlocked = false;
     await user.save();

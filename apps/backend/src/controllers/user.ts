@@ -13,7 +13,7 @@ export const getCurrentUser = async (
 ): Promise<void> => {
   try {
     const user = await User.findById(req.user?._id).populate('events');
-    if (!user) throw new ApiError(404, 'Пользователь не найден');
+    if (!user) throw new ApiError(404, 'Пользователь не найден 1');
 
     res.status(200).json(user);
   } catch (error) {
@@ -29,7 +29,7 @@ export const updateCurrentUser = async (
   try {
     const { username, profile } = req.body;
     const user = await User.findById(req.user?._id);
-    if (!user) throw new ApiError(404, 'Пользователь не найден');
+    if (!user) throw new ApiError(404, 'Пользователь не найден 2');
 
     if (username) user.username = username;
     if (profile) user.profile = { ...user.profile, ...profile };
@@ -48,7 +48,7 @@ export const deleteCurrentUser = async (
 ): Promise<void> => {
   try {
     const user = await User.findByIdAndDelete(req.user?._id);
-    if (!user) throw new ApiError(404, 'Пользователь не найден');
+    if (!user) throw new ApiError(404, 'Пользователь не найден 3');
 
     res.status(200).json({ message: 'Пользователь удален' });
   } catch (error) {
@@ -64,7 +64,7 @@ export const getUserById = async (
   try {
     const { id } = req.params;
     const user = await User.findById(id).populate('events');
-    if (!user) throw new ApiError(404, 'Пользователь не найден');
+    if (!user) throw new ApiError(404, 'Пользователь не найден 4');
 
     res.status(200).json(user);
   } catch (error) {
@@ -95,7 +95,7 @@ export const uploadAvatar = async (
 ): Promise<void> => {
   try {
     const user = await User.findById(req.user?._id);
-    if (!user) throw new ApiError(404, 'Пользователь не найден');
+    if (!user) throw new ApiError(404, 'Пользователь не найден 5');
 
     if (!req.file) throw new ApiError(400, 'Файл не загружен');
 

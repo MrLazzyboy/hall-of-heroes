@@ -34,7 +34,7 @@ export const authMiddleware = async (
       const user = await User.findById(decoded._id);
       
       if (!user) {
-        throw new ApiError(401, 'Пользователь не найден');
+        throw new ApiError(401, 'Пользователь не найден authMiddleware');
       }
 
       // Преобразуем _id в строку для совместимости
