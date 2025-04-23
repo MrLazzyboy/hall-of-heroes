@@ -3,12 +3,16 @@ import { AuthRequest } from '../types/auth';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Конфигурация multer для загрузки изображений
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const type = req.query.type || 'common';
-    const uploadDir = `uploads/${type}`;
+    const uploadDir = path.resolve(__dirname, `../../uploads/${type}`);
     
     // Создаем директорию, если её нет
     if (!fs.existsSync(uploadDir)) {
