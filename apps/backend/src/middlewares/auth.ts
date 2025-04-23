@@ -16,42 +16,24 @@ export const authMiddleware = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    console.log('=== Auth Middleware Start ===');
-    console.log('Headers:', JSON.stringify(req.headers, null, 2));
     
     const authHeader = req.headers.authorization;
-    console.log('Authorization header:', authHeader);
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      console.log('Error: Invalid token format');
       throw new ApiError(401, 'Некорректный формат токена');
     }
     
     const token = authHeader.split(' ')[1];
     if (!token) {
-      console.log('Error: Token is missing');
       throw new ApiError(401, 'Токен отсутствует');
     }
-
-    console.log('JWT Token:', token);
-    console.log('JWT_SECRET length:', JWT_SECRET.length);
     
     try {
       const decoded = jwt.verify(token, JWT_SECRET) as { _id: string };
-      console.log('Decoded JWT:', decoded);
       
       const user = await User.findById(decoded._id);
-      console.log('Database query for user ID:', decoded._id);
-      console.log('Found user:', user ? {
-        _id: user._id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        roles: user.roles
-      } : null);
       
       if (!user) {
-        console.log('Error: User not found in database');
         throw new ApiError(401, 'Пользователь не найден');
       }
 
@@ -71,15 +53,12 @@ export const authMiddleware = async (
           roles: req.user.roles
         });
       }
-      console.log('=== Auth Middleware End ===');
-      
+
       next();
     } catch (jwtError) {
-      console.log('JWT verification error:', jwtError);
       throw new ApiError(401, 'Недействительный токен');
     }
   } catch (error) {
-    console.error('Auth middleware error:', error);
     next(error);
   }
 };
