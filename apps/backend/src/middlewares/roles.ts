@@ -12,9 +12,9 @@ export const isAdmin = async (
     if (!req.user?._id) {
       throw new ApiError(401, 'Пользователь не аутентифицирован');
     }
-    const user = await User.findById(req.user._id || req.user.id);
+    const user = await User.findById(req.user._id);
     if (!user) {
-      throw new ApiError(404, 'Пользователь не найден');
+      throw new ApiError(404, 'Пользователь не найден при проверке ролей');
     }
     if (user.role !== 'Admin' && !user.roles.includes('Admin')) {
       throw new ApiError(403, 'Доступ запрещен');
