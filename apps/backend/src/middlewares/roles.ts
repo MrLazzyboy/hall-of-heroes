@@ -12,7 +12,7 @@ export const isAdmin = async (
     if (!req.user?._id) {
       throw new ApiError(401, 'Пользователь не аутентифицирован');
     }
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user._id || req.user.id);
     if (!user) {
       throw new ApiError(404, 'Пользователь не найден');
     }
