@@ -110,6 +110,7 @@ export const session = async (
   next: NextFunction
 ) => {
   try {
+
     const token = req.headers.authorization?.split(' ')[1];
     if (!token) {
       throw new ApiError(401, 'Токен отсутствует');
@@ -117,7 +118,7 @@ export const session = async (
     const decoded = jwt.verify(token, JWT_SECRET) as { _id: string };
     res
       .status(200)
-      .json({ message: 'Сессия действительна', _id: decoded._id });
+      .json({ message: 'Сессия является действительной', _id: decoded._id });
   } catch (error) {
     next(error);
   }
