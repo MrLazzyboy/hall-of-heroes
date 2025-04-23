@@ -16,7 +16,7 @@ export const isAdmin = async (
     if (!user) {
       throw new ApiError(404, 'Пользователь не найден');
     }
-    if (user.role !== 'Admin') {
+    if (user.role !== 'Admin' && !user.roles.includes('Admin')) {
       throw new ApiError(403, 'Доступ запрещен');
     }
     next();
