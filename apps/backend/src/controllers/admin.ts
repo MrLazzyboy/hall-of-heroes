@@ -199,21 +199,28 @@ export const deleteNews = async (
   }
 };
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllUsers = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const role = req.query.role as string;
+    const status = req.query.status as string;
     const skip = (page - 1) * limit;
 
     // Формируем условия поиска
     const query: any = {};
     if (role) {
-      // Проверяем основную роль или наличие роли в массиве дополнительных ролей
       query.$or = [
         { role: role },
         { roles: role }
       ];
+    }
+    if (status) {
+      query.isBlocked = status === 'blocked';
     }
 
     const users = await User.find(query)
@@ -221,6 +228,10 @@ export const getAllUsers = async (req: Request, res: Response) => {
       .skip(skip)
       .limit(limit)
       .lean();
+
+    if (!users.length) {
+      throw new ApiError(404, 'Пользователи не найдены');
+    }
 
     const total = await User.countDocuments(query);
 
@@ -233,8 +244,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: 'Ошибка при получении списка пользователей' });
+    next(error);
   }
 };
