@@ -6,11 +6,11 @@
     <div class="home__container container">
       <div class="home__content">
         <div class="home__content-brand">
-          <img src="../../../assets/images/logo-row.svg" alt="" />
+          <img src="@/assets/images/logo-row.svg" alt="" />
         </div>
         <h3 class="home__content-title">аутентичный клуб для игр в D&D в Москве</h3>
         <p class="home__content-txt">Погрузитесь в фэнтезийную атмосферу вместе с нами!</p>
-        <div class="home__content-btn">К приключениям!!!</div>
+        <router-link to="/events" class="home__content-btn">К приключениям!</router-link>
       </div>
     </div>
   </div>

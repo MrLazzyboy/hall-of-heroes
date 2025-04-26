@@ -1,9 +1,16 @@
 <script lang="ts" setup>
 import LoginModal from './LoginModal.vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue'
+import { useUserGlobal } from '@/stores/userGlobal'
+import {useRoute, useRouter} from 'vue-router'
 
-
+const router = useRouter();
 const isLoginModalOpen = ref(false);
+const userStore = useUserGlobal();
+const goProfile = () => {
+  router.push('/user')
+}
+const loggedIn = computed(() => userStore.loggedIn)
 </script>
 
 <template>
@@ -12,22 +19,22 @@ const isLoginModalOpen = ref(false);
       <div class="navbar__wrapper">
         <div class="navbar__left">
           <router-link to="/" class="navbar__brand">
-            <img src="../assets/images/main-logo.svg" alt="Logo" class="navbar__logo" />
+            <img src="@/assets/images/main-logo.svg" alt="Logo" class="navbar__logo" />
           </router-link>
           <div class="navbar__socials">
-            <div class="navbar__socials-btn"><i class="fab fa-vk"></i></div>
-            <div class="navbar__socials-btn"><i class="fab fa-telegram-plane"></i></div>
+            <a href="https://vk.com/chertogi.club" target="_blank" class="navbar__socials-btn"><i class="fab fa-vk"></i></a>
+            <a href="https://t.me/ChertogiGeroev_Club" target="_blank" class="navbar__socials-btn"><i class="fab fa-telegram-plane"></i></a>
           </div>
         </div>
         <div class="navbar__center">
           <ul class="navbar__list">
-            <li class="navbar__list-item"><router-link to="/tariffs" class="navbar__list-link">О клубе</router-link>
+            <li class="navbar__list-item"><router-link to="/" class="navbar__list-link">О клубе</router-link>
             </li>
             <li class="navbar__list-item"><router-link to="/tariffs" class="navbar__list-link">Тарифы</router-link></li>
             <router-link to="/events" class="navbar__list-item navbar__list-wings">
-              <img src="../assets/icons/left-wing-icon.svg" alt="" />
+              <img src="@/assets/icons/left-wing-icon.svg" alt="" />
               <div href="" class="navbar__list-link">К приключениям</div>
-              <img src="../assets/icons/right-wing-icon.svg" alt="" />
+              <img src="@/assets/icons/right-wing-icon.svg" alt="" />
             </router-link>
             <li class="navbar__list-item"><router-link to="/news" class="navbar__list-link">Новости</router-link></li>
             <li class="navbar__list-item"><router-link to="/contacts" class="navbar__list-link">Контакты</router-link>
@@ -35,10 +42,17 @@ const isLoginModalOpen = ref(false);
           </ul>
         </div>
         <div class="navbar__right">
-          <div class="navbar__right-btn" @click="isLoginModalOpen = true">
+          <div v-if="loggedIn" class="navbar__right-btn" @click="goProfile">
+            <img v-if="userStore.user.profile?.avatarUrl" :src="userStore.user.profile.avatarUrl" alt="">
+            <i v-else class="fas fa-user-circle"></i>
+            Профиль
+          </div>
+          <div  v-else class="navbar__right-btn" @click="isLoginModalOpen = true">
             <i class="fas fa-user-circle"></i>
             Войти
           </div>
+
+
           <div class="navbar__burger">
             <img src="../assets/images/burger.svg" alt="">
           </div>
@@ -58,7 +72,7 @@ const isLoginModalOpen = ref(false);
   background: linear-gradient(257.41deg, rgba(90, 51, 98, 0.2) -4.79%, rgba(31, 24, 33, 0.2) 86.4%);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  position: fixed;
+  position: sticky;
   width: 100%;
   top: 0;
   z-index: 99;
@@ -171,7 +185,7 @@ const isLoginModalOpen = ref(false);
         rgba(34, 27, 36, 0.3) 50%,
         rgba(54, 38, 38, 0.3) 100%));
   border-radius: 5px;
-  padding: 12px 24px 12px 20px;
+  padding: 12px 24px 12px 24px;
   display: flex;
   flex-direction: row;
   gap: 10px;

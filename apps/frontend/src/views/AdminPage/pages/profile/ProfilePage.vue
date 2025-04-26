@@ -1,5 +1,10 @@
 <script setup lang="ts">
+import { useUserGlobal } from '@/stores/userGlobal'
+import { computed } from 'vue'
 
+const userStore = useUserGlobal()
+
+const user = computed(() => userStore.user)
 
 </script>
 <template>
@@ -8,36 +13,35 @@
             <div class="profile__top-left">
                 <img src="./images/avatar.png" alt="">
                 <div class="profile__left-info">
-                    <div class="profile__left-login">Kotiqueee</div>
+                    <div class="profile__left-login">{{ user.username }}</div>
                 </div>
             </div>
             <div class="profile__top-right">
                 <div class="profile__top-item">
                     <div class="profile__top-label">Имя</div>
-                    <div class="profile__top-title">Котикуе</div>
+                    <div class="profile__top-title">{{ user.name }}</div>
                 </div>
                 <div class="profile__top-item">
                     <div class="profile__top-label">Ссылка на соц. сети</div>
-                    <div class="profile__top-title">t.me/kotiqueee</div>
+                    <a target="_blank" :href="user.socialLink" class="profile__top-title">{{ user.socialLink }}</a>
                 </div>
                 <div class="profile__top-item">
                     <div class="profile__top-label">Телефон</div>
-                    <div class="profile__top-title">+7 999 999-99-99</div>
+                    <div class="profile__top-title">{{ user.phone }}</div>
                 </div>
                 <div class="profile__top-item">
                     <div class="profile__top-label">EMAIL</div>
-                    <div class="profile__top-title">fskookdfsko@gmail.com</div>
+                    <div class="profile__top-title">{{ user.email }}</div>
                 </div>
                 <div class="profile__top-item">
                     <div class="profile__top-label">Дата регистрации</div>
-                    <div class="profile__top-title">28.10.2024</div>
+                    <div class="profile__top-title">{{ user.created_at }}</div>
                 </div>
             </div>
         </div>
         <div class="profile__about">
             <div class="profile__about-label">Обо мне</div>
-            <div class="profile__about-txt">Королевство Эландор когда‑то было процветающим и мирным местом, но теперь
-                его окутала тьма. Древние пророчества шепчут о возвращении забытого</div>
+            <div class="profile__about-txt">{{ user.profile?.bio }}</div>
         </div>
         <div class="profile__info">
             <div class="profile__info-item">

@@ -5,8 +5,8 @@
     <div class="footer__container container">
       <div class="footer__wrapper">
         <div class="footer__brand">
-          <img class="footer__brand-logo" src="../assets/images/footer-logo.svg" alt="" />
-          <img class="footer__brand-phone" src="../assets/images/text_logo.svg" alt="">
+          <img class="footer__brand-logo" src="@/assets/images/footer-logo.svg" alt="" />
+          <img class="footer__brand-phone" src="@/assets/images/text_logo.svg" alt="">
         </div>
         <div class="footer__center">
           <h3 class="footer__center-title">Мы находимся</h3>
@@ -14,10 +14,10 @@
             г. Москва, м. Арбатская Малый Николопесковский переулок, 6
           </div>
 
-          <div class="footer__center-social">
+          <a href="https://t.me/ChertogiGeroev_Club" target="_blank" class="footer__center-social">
             <i class="fab fa-telegram-plane"></i>
             <div>Телеграм канал</div>
-          </div>
+          </a>
         </div>
 
         <div class="footer__right">
@@ -27,10 +27,10 @@
             <div class="working__hours"><span>СБ-ВС:</span> с 12:30 до 24:00</div>
           </div>
 
-          <div class="footer__right-social">
+          <a href="https://vk.com/chertogi.club" target="_blank" class="footer__right-social">
             <i class="fab fa-vk"></i>
             <div>Сообщество в ВК</div>
-          </div>
+          </a>
         </div>
       </div>
       <div class="footer__copy">

@@ -18,7 +18,9 @@
                         На этой сессии игроки создают персонажей, обсуждают ожидания от игры, выбирают правила
                         и проясняют детали предстоящего приключения. Это отличная возможность познакомиться с Мастером
                         и другими игроками. Такие встречи могут проводиться бесплатно на базе клуба или онлайн.</div>
-                    <div class="types__box-link">Подобрать игру <i class="fal fa-arrow-right"></i></div>
+                    <router-link :to="{
+                        name: 'events'
+                    }" class="types__box-link">Подобрать игру <i class="fal fa-arrow-right"></i></router-link>
                 </div>
                 <div class="types__box">
                     <div class="types__box-top">
@@ -30,7 +32,12 @@
                         Оно идеально подходит для тех, кто хочет быстро погрузиться в историю и завершить её за один
                         раз, испытав сразу всю гамму эмоций от хорошей истории. Такие игры часто имеют более динамичный
                         сюжет и чёткие цели, и пользуются большой популярностью, позволяя пробовать каждый раз что‑то
-                        новое. <i class="fal fa-arrow-right"></i></div>
+                        новое.
+
+                    </div>
+                  <router-link :to="{
+                        name: 'events'
+                      }" class="types__box-link">Подобрать игру <i class="fal fa-arrow-right"></i></router-link>
                 </div>
                 <div class="types__box">
                     <div class="types__box-top">
@@ -43,7 +50,9 @@
 
                         Эти игры могут иметь несколько частей или эпизодов, которые логично завершатся в течение
                         нескольких встреч.</div>
-                    <div class="types__box-link">Подобрать игру <i class="fal fa-arrow-right"></i></div>
+                    <router-link :to="{
+                        name: 'events'
+                    }" class="types__box-link">Подобрать игру <i class="fal fa-arrow-right"></i></router-link>
                 </div>
                 <div class="types__box">
                     <div class="types__box-top">
@@ -54,7 +63,9 @@
                         на протяжении нескольких встреч. Игроки постепенно исследуют мир, развивают своих персонажей
                         и взаимодействуют с сюжетными арками. Кампании требуют регулярных встреч и обычно более
                         глубокого погружают в игровой процесс и историю.</div>
-                    <div class="types__box-link">Подобрать игру <i class="fal fa-arrow-right"></i></div>
+                    <router-link :to="{
+                      name: 'events'
+                    }" class="types__box-link">Подобрать игру <i class="fal fa-arrow-right"></i></router-link>
                 </div>
 
             </div>
@@ -104,6 +115,7 @@
 
             .types__box-top {
                 display: flex;
+              align-items: center;
                 gap: 24px;
                 margin-bottom: 30px;
 

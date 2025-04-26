@@ -1,42 +1,51 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Navigation } from 'swiper/modules'
+import 'swiper/css/navigation'
+// Import Swiper styles
+import 'swiper/css'
 
 const interies = ref([
   {
     title: 'Зал 1',
+    images: [new URL('../images/interier/zal1.png', import.meta.url).href, new URL('../images/interier/zal1.png', import.meta.url).href],
     img: new URL('../images/interier/zal1.png', import.meta.url).href,
-    active: true,
+    active: true
   },
   {
     title: 'Зал 2',
+    images: [new URL('../images/interier/orig.jpg', import.meta.url).href, new URL('../images/interier/orig.jpg', import.meta.url).href],
     img: new URL('../images/interier/orig.jpg', import.meta.url).href,
-    active: false,
+    active: false
   },
   {
     title: 'Зал 3',
+    images: [new URL('../images/interier/zal1.png', import.meta.url).href, new URL('../images/interier/zal1.png', import.meta.url).href],
     img: new URL('../images/interier/zal1.png', import.meta.url).href,
-    active: false,
+    active: false
   },
   {
     title: 'Зал 4',
+    images: [new URL('../images/interier/zal1.png', import.meta.url).href, new URL('../images/interier/zal1.png', import.meta.url).href],
     img: new URL('../images/interier/zal1.png', import.meta.url).href,
-    active: false,
+    active: false
   },
   {
     title: 'Зал 5',
+    images: [new URL('../images/interier/zal1.png', import.meta.url).href, new URL('../images/interier/zal1.png', import.meta.url).href],
     img: new URL('../images/interier/zal1.png', import.meta.url).href,
-    active: false,
-  },
+    active: false
+  }
 ])
 
 const activeImage = ref(interies.value.find((item) => item.active)?.img || '')
-
+const activeInterie = ref(interies.value.find((item) => item.active) || '')
 const setActive = (index: number) => {
   interies.value.forEach((item) => (item.active = false))
   interies.value[index].active = true
-  activeImage.value = interies.value[index].img
+  activeInterie.value = interies.value[index]
 
-  console.log(activeImage.value)
 }
 
 const nextImage = () => {
@@ -44,7 +53,12 @@ const nextImage = () => {
   const nextIndex = (currentIndex + 1) % interies.value.length
   setActive(nextIndex)
 }
-
+const onSwiper = (swiper) => {
+  console.log(swiper)
+}
+const onSlideChange = () => {
+  console.log('slide change')
+}
 const prevImage = () => {
   const currentIndex = interies.value.findIndex((item) => item.active)
   const prevIndex = (currentIndex - 1 + interies.value.length) % interies.value.length
@@ -59,16 +73,29 @@ const prevImage = () => {
       <div class="interier__gallery">
         <div class="interier__gallery-btns">
           <div class="interier__gallery-btn" :class="{ active: item.active }" v-for="(item, index) in interies"
-            :key="index" @click="setActive(index)">
+               :key="index" @click="setActive(index)">
             {{ item.title }}
             <img src="../images/interier/bg-btn.png" alt="" />
           </div>
         </div>
 
         <div class="interier__gallery-show">
-          <div class="show__left"><i class="fas fa-chevron-left" @click="prevImage"></i></div>
-          <img :src="`${activeImage}`" alt="Выбранное изображение" />
-          <div class="show__right"><i class="fas fa-chevron-right" @click="nextImage"></i></div>
+          <swiper
+            navigation
+            :modules="[Navigation]"
+            :slides-per-view="1"
+            class="_swiper"
+            :space-between="50"
+            @swiper="onSwiper"
+            @slideChange="onSlideChange"
+          >
+            <swiper-slide v-for="image in activeInterie.images" :key="image">
+              <img :src="image" alt="Выбранное изображение" />
+
+            </swiper-slide>
+          </swiper>
+<!--          <div class="show__left"><i class="fas fa-chevron-left" @click="prevImage"></i></div>-->
+<!--          <div class="show__right"><i class="fas fa-chevron-right" @click="nextImage"></i></div>-->
         </div>
       </div>
     </div>
@@ -79,6 +106,54 @@ const prevImage = () => {
 .interier {
   margin-top: 86px;
   padding: 0 10px;
+
+  ._swiper:deep(.swiper-button-prev ) {
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    max-width: 91px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--plate-03,
+      linear-gradient(114.17deg,
+        rgba(54, 38, 38, 0.3) 0%,
+        rgba(34, 27, 36, 0.3) 50%,
+        rgba(54, 38, 38, 0.3) 100%));
+    color: white;
+    backdrop-filter: blur(2px);
+    margin-top: 0;
+    @media (max-width: 900px) {
+      display: none;
+    }
+    left: 0;
+  }
+
+  ._swiper:deep(.swiper-button-next ) {
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    max-width: 91px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--plate-03,
+      linear-gradient(114.17deg,
+        rgba(54, 38, 38, 0.3) 0%,
+        rgba(34, 27, 36, 0.3) 50%,
+        rgba(54, 38, 38, 0.3) 100%));
+    color: white;
+    backdrop-filter: blur(2px);
+    right: 0;
+    margin-top: 0;
+    @media (max-width: 900px) {
+      display: none;
+    }
+  }
 
   .interier__title {
     color: #ffffff;
@@ -209,10 +284,10 @@ const prevImage = () => {
         align-items: center;
         justify-content: center;
         background: var(--plate-03,
-            linear-gradient(114.17deg,
-              rgba(54, 38, 38, 0.3) 0%,
-              rgba(34, 27, 36, 0.3) 50%,
-              rgba(54, 38, 38, 0.3) 100%));
+          linear-gradient(114.17deg,
+            rgba(54, 38, 38, 0.3) 0%,
+            rgba(34, 27, 36, 0.3) 50%,
+            rgba(54, 38, 38, 0.3) 100%));
         color: white;
         backdrop-filter: blur(2px);
 

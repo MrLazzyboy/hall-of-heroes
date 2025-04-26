@@ -1,129 +1,121 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue'
 import TagAddModal from './components/TagAddModal.vue';
+import { filtersService } from '@/services/publicServices'
+import { useToast } from 'vue-toastification'
 
+const isEdit = ref(false)
 const addModal = ref(false)
+const toast = useToast()
+const filters = ref([])
+const selectedFilterItem = ref({ })
+const closeAddModal = () => {
+  addModal.value = false
+  isEdit.value = false
+  selectedFilterItem.value = {}
+}
+const updateFilterItem = (item) => {
+  // Здесь можно добавить логику для обновления элемента фильтра
+  if (isEdit.value) {
+    filtersService().updateFilter(item)
+      .then((response) => {
+        filtersService().getFilters()
+          .then((response) => {
+            filters.value = response
+          })
+          .catch((error) => {
+            toast.error(error.data.error || 'Ошибка при получении фильтров:')
+          })
+        closeAddModal()
+        toast.success('Фильтр успешно обновлен')
+      })
+      .catch((error) => {
+        toast.error(error.data.error || 'Ошибка при создании фильтра:')
+      })
+  } else {
+    filtersService().createFilter(item)
+      .then((response) => {
+        filtersService().getFilters()
+          .then((response) => {
+            filters.value = response
+          })
+          .catch((error) => {
+            toast.error(error.data.error || 'Ошибка при получении фильтров:')
+          })
+        addModal.value = false
+        toast.success('Фильтр успешно создан')
+      })
+      .catch((error) => {
+        toast.error(error.data.error || 'Ошибка при создании фильтра')
+      })
+  }
+}
+
+const editFilterItem = (filter, item) => {
+  selectedFilterItem.value = { ...item }
+  isEdit.value = true
+  addModal.value = true
+}
+
+const deleteFilterItem = (filter, item) => {
+  filtersService().deleteFilter(item._id)
+    .then((response) => {
+      filtersService().getFilters()
+        .then((response) => {
+          filters.value = response
+        })
+        .catch((error) => {
+          toast.error(error.data.error || 'Ошибка при получении фильтров:')
+        })
+      addModal.value = false
+      toast.success('Фильтр успешно создан')
+    })
+    .catch((error) => {
+      toast.error(error.data.error || 'Ошибка при удаление фильтра')
+    })
+}
+
+
+onMounted(() => {
+  filtersService().getFilters()
+    .then((response) => {
+      filters.value = response
+    })
+    .catch((error) => {
+      console.error('Ошибка при получении фильтров:', error.data.error)
+    })
+})
 
 </script>
 
 <template>
     <div class="tags">
         <div class="tags__row">
+          <template v-for="filter in filters" :key="filter._id">
             <div class="tags__card">
-                <div class="tags__card-title">Система</div>
-                <div class="tags__card-item">
-                    <div class="tags__card-left">
-                        <div class="tags__card-name">Something type</div>
-                        <div class="tags__card-undertitle">Короткое название</div>
-                    </div>
-                    <div class="tags__card-right">
-                        <img src="./images/PencilSimple.svg" alt="">
-                        <img src="./images/X.svg" alt="">
-                    </div>
+              <div class="tags__card-title">{{ filter.name }}</div>
+              <div v-for="item in filter.options" :key="item._id" class="tags__card-item">
+                <div  class="tags__card-left">
+                  <div class="tags__card-name">{{ item.fullName }}</div>
+                  <div class="tags__card-undertitle">{{ item.description }}</div>
+                </div>
+                <div class="tags__card-right">
+                  <img @click="editFilterItem(filter, item)" src="./images/PencilSimple.svg" alt="">
+                  <img @click="deleteFilterItem(filter, item)" src="./images/X.svg" alt="">
+                </div>
 
-                </div>
-                <div class="tags__card-bottom"  @click="addModal = true">
-                    <img src="./images/Vector.svg" alt="">
-                    Добавить
-                </div>
+              </div>
+              <div class="tags__card-bottom"  @click="addModal = true">
+                <img src="./images/Vector.svg" alt="">
+                Добавить
+              </div>
             </div>
-            <div class="tags__card">
-                <div class="tags__card-title">Система</div>
-                <div class="tags__card-item">
-                    <div class="tags__card-left">
-                        <div class="tags__card-name">Something type</div>
-                        <div class="tags__card-undertitle">Короткое название</div>
-                    </div>
-                    <div class="tags__card-right">
-                        <img src="./images/PencilSimple.svg" alt="">
-                        <img src="./images/X.svg" alt="">
-                    </div>
+          </template>
 
-                </div>
-                <div class="tags__card-bottom"  @click="addModal = true">
-                    <img src="./images/Vector.svg" alt="">
-                    Добавить
-                </div>
-            </div>
-            <div class="tags__card">
-                <div class="tags__card-title">Система</div>
-                <div class="tags__card-item">
-                    <div class="tags__card-left">
-                        <div class="tags__card-name">Something type</div>
-                        <div class="tags__card-undertitle">Короткое название</div>
-                    </div>
-                    <div class="tags__card-right">
-                        <img src="./images/PencilSimple.svg" alt="">
-                        <img src="./images/X.svg" alt="">
-                    </div>
-
-                </div>
-                <div class="tags__card-bottom"  @click="addModal = true">
-                    <img src="./images/Vector.svg" alt="">
-                    Добавить
-                </div>
-            </div>
         </div>
-        <div class="tags__row">
-            <div class="tags__card">
-                <div class="tags__card-title">Система</div>
-                <div class="tags__card-item">
-                    <div class="tags__card-left">
-                        <div class="tags__card-name">Something type</div>
-                        <div class="tags__card-undertitle">Короткое название</div>
-                    </div>
-                    <div class="tags__card-right">
-                        <img src="./images/PencilSimple.svg" alt="">
-                        <img src="./images/X.svg" alt="">
-                    </div>
-
-                </div>
-                <div class="tags__card-bottom"  @click="addModal = true">
-                    <img src="./images/Vector.svg" alt="">
-                    Добавить
-                </div>
-            </div>
-            <div class="tags__card">
-                <div class="tags__card-title">Система</div>
-                <div class="tags__card-item">
-                    <div class="tags__card-left">
-                        <div class="tags__card-name">Something type</div>
-                        <div class="tags__card-undertitle">Короткое название</div>
-                    </div>
-                    <div class="tags__card-right">
-                        <img src="./images/PencilSimple.svg" alt="">
-                        <img src="./images/X.svg" alt="">
-                    </div>
-
-                </div>
-                <div class="tags__card-bottom"  @click="addModal = true">
-                    <img src="./images/Vector.svg" alt="">
-                    Добавить
-                </div>
-            </div>
-            <div class="tags__card">
-                <div class="tags__card-title">Система</div>
-                <div class="tags__card-item">
-                    <div class="tags__card-left">
-                        <div class="tags__card-name">Something type</div>
-                        <div class="tags__card-undertitle">Короткое название</div>
-                    </div>
-                    <div class="tags__card-right">
-                        <img src="./images/PencilSimple.svg" alt="">
-                        <img src="./images/X.svg" alt="">
-                    </div>
-
-                </div>
-                <div class="tags__card-bottom"  @click="addModal = true">
-                    <img src="./images/Vector.svg" alt="">
-                    Добавить
-                </div>
-            </div>
-        </div>
-
     </div>
 
-    <TagAddModal :isOpen="addModal" @close="addModal = false" />
+    <TagAddModal :isOpen="addModal" @close="closeAddModal" @save="updateFilterItem" :item="selectedFilterItem" />
 </template>
 
 <style scoped lang="scss">

@@ -15,19 +15,20 @@
                             <div class="input__wrapper">
                                 <label for="">Введите логин</label>
                                 <div class="input__group">
-                                    <input type="text" placeholder="Введите логин">
+                                    <input v-model="form.username" type="text" placeholder="Введите логин">
                                 </div>
                             </div>
                             <div class="input__wrapper">
                                 <label for="">Имя</label>
                                 <div class="input__group">
-                                    <input type="text" placeholder="Имя">
+                                    <input v-model="form.name" type="text" placeholder="Имя">
                                 </div>
                             </div>
                             <div class="input__wrapper">
                                 <label for="">Какая роль? </label>
-                                <div class="input__group">
-                                    <input type="text" placeholder="Какая роль?">
+                                <div class="input__group _no-padding">
+                                  <BaseSelect :items="userTypes" v-model="form.role"
+                                              placeholder="Назначьте роль" />
                                     <i class="fal fa-chevron-down"></i>
                                 </div>
                             </div>
@@ -35,7 +36,7 @@
 
                         </div>
 
-                        <a href="#!" @click="closeModal" class="content__form-btn add">Добавить</a>
+                        <button href="#!" type="button" @click="submit" class="content__form-btn add">Добавить</button>
 
 
                     </form>
@@ -46,6 +47,9 @@
 </template>
 <script setup lang="ts">
 import { ref, defineProps, defineEmits } from 'vue';
+import BaseSelect from '@/components/BaseSelect.vue'
+import { createAdminService } from '@/services/adminService'
+import { useToast } from 'vue-toastification'
 
 defineProps<{ isOpen: boolean }>();
 const emit = defineEmits(['close']);
@@ -56,9 +60,42 @@ const closeModal = () => {
     emit('close');
 };
 
+const userTypes = [
+    { value: 'Admin', title: 'Администратор' },
+    { value: 'Master', title: 'Мастер' },
+    { value: 'Player', title: 'Игрок' }
+];
+
 const togglePasswordVisibility = () => {
     passwordVisible.value = !passwordVisible.value;
 };
+
+const form = ref({
+    username: '',
+    name: '',
+    role: ''
+});
+const toast = useToast()
+const validateForm = () => {
+    if (!form.value.username || !form.value.name || !form.value.role) {
+        toast.error('Пожалуйста, заполните все поля');
+        return false;
+    }
+    return true;
+};
+const submit = () => {
+  if (!validateForm()) {
+    return;
+  }
+  createAdminService().addUser(form.value)
+    .then((response) => {
+      toast.success( response.message || 'Пользователь успешно добавлен');
+      closeModal();
+    })
+    .catch((error) => {
+      toast.error( error.data.message || 'Ошибка при добавлении пользователя');
+    });
+}
 </script>
 
 <style lang="scss" scoped>
@@ -66,7 +103,9 @@ const togglePasswordVisibility = () => {
 .fade-leave-active {
     transition: opacity 0.3s ease-in-out;
 }
-
+._no-padding {
+  padding: 0;
+}
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;

@@ -5,16 +5,16 @@
     <div class="reset__container container">
       <h3 class="reset__title">Восстановление пароля</h3>
 
-      <form action="" class="reset__form">
+      <form @submit.prevent="resetPassword" class="reset__form">
         <div class="reset__form-row">
           <div class="reset__form-title">Введите email, к которому привязан аккаунт</div>
           <div class="reset__form-input">
             <div class="input__group">
-              <input type="email" name="" id="" placeholder="Введите Email">
+              <input v-model="email" type="email" name="email" id="" placeholder="Введите Email">
             </div>
           </div>
         </div>
-        <router-link to="/require-password" class="reset__btn btn">Восстановить</router-link>
+        <button type="button" @click="resetPassword" class="reset__btn btn">Восстановить</button>
       </form>
     </div>
   </div>
@@ -22,6 +22,28 @@
 
 <script setup lang="ts">
 
+import { useToast } from 'vue-toastification'
+import { createUserService } from '@/services'
+import { useRouter } from 'vue-router'
+import { ref } from 'vue'
+
+const email = ref<string>('')
+const toast = useToast()
+const router = useRouter()
+const resetPassword = () => {
+  if (email.value) {
+    createUserService().resetPassword({
+      email: email.value
+    }).then(() => {
+      toast.success('Письмо с восстановлением пароля отправлено на ваш email')
+      router.push({ name: 'require-password' })
+    }).catch((error) => {
+      toast.error(error.message || 'Произошла ошибка, попробуйте позже')
+    })
+  } else {
+    toast.error('Пожалуйста, введите ваш email')
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -97,7 +119,6 @@
       width: 100%;
       flex-grow: 1;
       justify-content: center;
-
 
 
       @media (max-width: 648px) {

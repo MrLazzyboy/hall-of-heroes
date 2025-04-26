@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import { useUserGlobal } from '@/stores/userGlobal'
+import { computed } from 'vue'
+
+const userStore = useUserGlobal()
+
+const user = computed(() => userStore.user)
 </script>
 
 <template>
@@ -30,12 +36,37 @@
         </router-link>
       </li>
     </ul>
+    <template v-if="user.role === 'Admin'">
+      <div class="user__nav-title">Админ панель</div>
+
+      <ul class="user__nav-list admin__list">
+        <li class="user__nav-item">
+          <router-link :to="{ name: 'admin-base-user' }" class="user__nav-link" active-class="active">
+            <img src="./images/people.svg" alt=""> База пользователей
+          </router-link>
+        </li>
+        <li class="user__nav-item">
+          <router-link :to="{ name: 'admin-tags' }" class="user__nav-link" active-class="active">
+            <img src="./images/edit.svg" alt=""> Редактировать теги
+          </router-link>
+        </li>
+      </ul>
+    </template>
+
   </div>
 </template>
 
 <style lang="scss" scoped>
 .user__nav {
   max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+
+  .user__nav-title {
+    color: #d5b0e4;
+    font-size: 32px;
+  }
 
   @media (max-width: 768px) {
     display: none;

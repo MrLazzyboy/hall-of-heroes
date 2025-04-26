@@ -11,8 +11,21 @@
 import { RouterView } from 'vue-router'
 import HeaderComponent from './components/HeaderComponent.vue'
 import FooterComponent from './components/FooterComponent.vue'
+import { useUserGlobal } from '@/stores/userGlobal'
+import { onMounted } from 'vue'
+import { isAuthenticated } from '@/services/authService'
+
+const userStore = useUserGlobal()
 
 
+onMounted(() => {
+  if (isAuthenticated()) {
+    userStore.setLoggedIn(true)
+    userStore.initUserGlobal()
+  } else {
+    userStore.setLoggedIn(false)
+  }
+})
 </script>
 
 
