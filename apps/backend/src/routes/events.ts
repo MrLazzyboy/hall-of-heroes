@@ -40,6 +40,12 @@ router.delete(
   deleteEvent as RequestHandler
 );
 
+// Получение всех публичных событий
+router.get(
+  '/all',
+  getAllPublicEvents as RequestHandler
+);
+
 // Получение события по ID
 router.get(
   '/:id',
@@ -51,12 +57,6 @@ router.get(
   '/',
   authMiddleware as RequestHandler,
   getEvents as RequestHandler
-);
-
-// Получение всех публичных событий
-router.get(
-  '/all',
-  getAllPublicEvents as RequestHandler
 );
 
 // Подача заявки на участие в событии
