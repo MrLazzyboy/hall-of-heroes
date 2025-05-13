@@ -19,7 +19,7 @@ const user = computed(() => {
   return userStore.user
 })
 const addEvent = () => {
-  if (user.value?.role === 'Master' || user.value?.role === 'Admin') {
+  if (user.value?.role !== 'Master' && user.value?.role !== 'Admin') {
     toast.error('Вы не можете создавать события')
   } else {
     // Redirect to create event page
