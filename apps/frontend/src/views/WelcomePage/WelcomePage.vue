@@ -5,7 +5,7 @@
         <div class="welcome__container container">
             <h3 class="welcome__title">Добро пожаловать в чертоги, Герой!</h3>
             <h4 class="welcome__subtitle">Регистрация прошла успешно. Автоматическая переадресация…</h4>
-            <div class="welcome__btn">К приключениям!</div>
+            <div class="welcome__btn">К приключениям!?!?</div>
         </div>
     </div>
 </template>
