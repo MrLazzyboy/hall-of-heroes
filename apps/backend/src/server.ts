@@ -27,13 +27,28 @@ const PORT = process.env.PORT || 5001;
 app.use(helmet());
 app.use(hpp());
 
-// todo поправить если будут проблемы с корсами
-// const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['*'];
+const allowedOrigins = [
+  'https://xn----dtbbbhdau6cfpgt1e.xn--p1ai',
+  'https://dev.xn----dtbbbhdau6cfpgt1e.xn--p1ai',
+  'https://dev-api.xn----dtbbbhdau6cfpgt1e.xn--p1ai',
+  'https://api.xn----dtbbbhdau6cfpgt1e.xn--p1ai',
+  'http://localhost:8080',
+];
+
 app.use(
   cors({
-    origin: '*', // Разрешить запросы со всех доменов
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], // Разрешенные методы
-    allowedHeaders: '*', // Разрешенные заголовки
+    origin: function (origin, callback) {
+      // Разрешаем запросы без Origin (например, curl, мобильные приложения)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: '*',
   })
 );
 
