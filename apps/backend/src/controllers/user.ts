@@ -94,6 +94,7 @@ export const uploadAvatar = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    console.log('avatar');
     const user = await User.findById(req.user?._id);
     if (!user) throw new ApiError(404, 'Пользователь не найден 5');
 
