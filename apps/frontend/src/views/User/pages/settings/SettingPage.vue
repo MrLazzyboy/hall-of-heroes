@@ -4,6 +4,20 @@ import { useToast } from 'vue-toastification'
 import { createUserService } from '@/services'
 import { useUserGlobal } from '@/stores/userGlobal'
 
+interface UserProfile {
+  firstName: string;
+  bio: string;
+  socialLink: string;
+  avatarUrl?: string;
+}
+
+interface User {
+  username: string;
+  email: string;
+  phone: string;
+  profile: UserProfile;
+}
+
 const form = ref({
   username: '',
   email: '',
@@ -46,21 +60,40 @@ const togglePasswordVisibility = () => {
 const togglePasswordRequireVisibility = () => {
   passwordVisibleRequire.value = !passwordVisibleRequire.value
 }
-const handleFileUpload = (event) => {
-  const file = event.target.files[0]
+const handleFileUpload = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  
   if (file) {
-    const reader = new FormData()
+    // Проверяем размер файла (10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Размер файла не должен превышать 10MB');
+      return;
+    }
 
-    reader.append('file', file)
-    createUserService().updateAvatar(reader).then(() => {
-      toast.success('Avatar updated successfully')
-    }).catch(error => {
-      toast.error(error.message)
-    }).finally(() => {
-      avatarUpload.value = false
-    })
+    // Проверяем тип файла
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      toast.error('Поддерживаются только форматы JPEG, PNG и WebP');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    createUserService().updateAvatar(formData)
+      .then((response) => {
+        toast.success('Аватар успешно обновлен');
+        // Обновляем аватар в сторе
+        userStore.setUser(response.user);
+      })
+      .catch(error => {
+        toast.error(error.message || 'Ошибка при загрузке аватара');
+      })
+      .finally(() => {
+        avatarUpload.value = false;
+      });
   }
-}
+};
 const validateForm = () => {
   errors.value.login = form.value.username ? '' : 'Обязательно'
 
@@ -138,9 +171,9 @@ onMounted(() => {
           <img src="./images/Vector.svg" alt="">
           <input hidden="hidden" type="file" id="avatar" accept="image/jpeg, image/jpg, image/png"
                  @change="handleFileUpload">
-          <div class="settings__left-title">Нажмите для выбора изображения, либо перетащите его</div>
-          <div class="settings__left-subtitle">Формат jpeg, jpg, png, весом не более 1 MB и размером не более
-            2000 × 200
+          <div class="settings__left-title">Нажмите для выбора изображения, либо перетащите его</div>
+          <div class="settings__left-subtitle">Формат jpeg, jpg, png, весом не более 1 MB и размером не более
+            2000 × 200
           </div>
         </label>
         <div class="settings__top-right">
