@@ -16,7 +16,7 @@ export const isAdmin = async (
     if (!user) {
       throw new ApiError(404, 'Пользователь не найден при проверке ролей');
     }
-    if (user.role !== 'Admin' && !user.roles.includes('Admin')) {
+    if (user.role !== 'Admin') {
       throw new ApiError(403, 'Доступ запрещен');
     }
     next();
@@ -35,7 +35,7 @@ export const isMaster = async (
       throw new ApiError(401, 'Пользователь не аутентифицирован');
     }
     const user = await User.findById(req.user._id);
-    if (!user || !user.roles.includes('Master')) {
+    if (!user || user.role !== 'Master') {
       throw new ApiError(403, 'Доступ запрещен');
     }
     next();

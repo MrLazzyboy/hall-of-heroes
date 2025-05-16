@@ -47,11 +47,12 @@ export const register = async (
       email,
       phone,
       password: hashedPassword,
-      name,
-      bio,
-      socialLink,
-      role: 'Player',
-      roles: [],
+      profile: {
+        firstName: name,
+        bio,
+        socialLink
+      },
+      role: 'Player'
     });
     await newUser.save();
 
@@ -131,26 +132,25 @@ export const updateRole = async (
 ) => {
   try {
     const { _id, role } = req.body;
-    if (!_id || !['Player', 'Master'].includes(role)) {
+    if (!_id || !['Player', 'Master', 'Admin'].includes(role)) {
       throw new ApiError(400, 'Некорректные данные');
     }
     const user = await User.findById(_id);
     if (!user) {
       throw new ApiError(404, 'Пользователь не найден');
     }
-    if (role === 'Master') {
-      if (!user.roles.includes('Master')) {
-        user.roles.push('Master');
-      } else if (user.role !== 'Admin') {
-        throw new ApiError(403, 'Только админ может назначать Мастера');
-      }
-    } else {
-      user.roles = user.roles.filter((r) => r !== 'Master');
+    
+    // Проверяем права на изменение роли
+    if (role === 'Admin' && req.user?.role !== 'Admin') {
+      throw new ApiError(403, 'Только админ может назначать роль Администратора');
     }
+    
+    user.role = role;
     await user.save();
-    res
-      .status(200)
-      .json({ message: `Роль пользователя обновлена`, roles: user.roles });
+    res.status(200).json({ 
+      message: `Роль пользователя обновлена`, 
+      role: user.role 
+    });
   } catch (error) {
     next(error);
   }
