@@ -38,7 +38,6 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Разрешаем запросы без Origin (например, curl, мобильные приложения)
       if (!origin) return callback(null, true);
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
@@ -47,15 +46,19 @@ app.use(
       }
     },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: '*',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    exposedHeaders: ['Content-Range', 'X-Content-Range'],
+    maxAge: 86400 // 24 часа
   })
 );
 
 if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
-app.use(express.json({ limit: '10kb' })); // Ограничение 10KB
+
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Запросы с ограничением
 app.use('/auth', authRoutes);
