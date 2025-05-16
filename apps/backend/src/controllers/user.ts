@@ -5,6 +5,11 @@ import Notification from '../models/notification.ts';
 import { ApiError } from '../middlewares/errorHandler.ts';
 import path from 'path';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export const getCurrentUser = async (
   req: AuthRequest,
@@ -94,7 +99,6 @@ export const uploadAvatar = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    console.log('avatar');
     const user = await User.findById(req.user?._id);
     if (!user) throw new ApiError(404, 'Пользователь не найден 5');
 

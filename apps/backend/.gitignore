@@ -17,6 +17,7 @@ src/.env
 
 /cypress/videos/
 /cypress/screenshots/
+/uploads/
 
 # Editor directories and files
 .vscode/*
