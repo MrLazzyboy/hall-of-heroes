@@ -246,3 +246,62 @@ export const getAllUsers = async (
     next(error);
   }
 };
+
+export const updateFilter = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { name, options } = req.body;
+
+    if (!name || !options || !Array.isArray(options)) {
+      throw new ApiError(400, 'Некорректные данные');
+    }
+
+    const filter = await Filter.findById(id);
+    if (!filter) {
+      throw new ApiError(404, 'Фильтр не найден');
+    }
+
+    filter.name = name;
+    filter.options = options;
+    await filter.save();
+
+    await AdminAction.create({
+      adminId: req.user?._id,
+      actionType: 'edit_filter',
+      targetId: filter._id,
+    });
+
+    res.status(200).json({ message: 'Фильтр успешно обновлен', filter });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteFilter = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const filter = await Filter.findByIdAndDelete(id);
+    
+    if (!filter) {
+      throw new ApiError(404, 'Фильтр не найден');
+    }
+
+    await AdminAction.create({
+      adminId: req.user?._id,
+      actionType: 'delete_filter',
+      targetId: id,
+    });
+
+    res.status(200).json({ message: 'Фильтр успешно удален' });
+  } catch (error) {
+    next(error);
+  }
+};
