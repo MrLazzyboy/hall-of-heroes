@@ -27,16 +27,18 @@ const PORT = process.env.PORT || 5001;
 app.use(helmet());
 app.use(hpp());
 
-const allowedOrigins = [
-  'https://xn----dtbbbhdau6cfpgt1e.xn--p1ai',
-  'https://dev.xn----dtbbbhdau6cfpgt1e.xn--p1ai',
-  'https://dev-api.xn----dtbbbhdau6cfpgt1e.xn--p1ai',
-  'https://api.xn----dtbbbhdau6cfpgt1e.xn--p1ai',
-  'http://localhost:8080',
-  'http://localhost:5173',
-  'http://localhost:3000',
-  'http://localhost:8083',
-];
+// const allowedOrigins = [
+//   'https://xn----dtbbbhdau6cfpgt1e.xn--p1ai',
+//   'https://dev.xn----dtbbbhdau6cfpgt1e.xn--p1ai',
+//   'https://dev-api.xn----dtbbbhdau6cfpgt1e.xn--p1ai',
+//   'https://api.xn----dtbbbhdau6cfpgt1e.xn--p1ai',
+//   'http://localhost:8080',
+//   'http://localhost:5173',
+//   'http://localhost:3000',
+//   'http://localhost:8083',
+// ];
+
+const allowedOrigins = '*';
 
 app.use(
   cors({
