@@ -1,14 +1,15 @@
 import rateLimit from 'express-rate-limit';
 
+// todo: сделать нормальные лимиты когда будем готовы к продакшену
 export const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 минут
-  limit: 5, // Макс. 5 попыток
+  limit: 50, // Макс. 5 попыток
   message: { error: 'Слишком много попыток. Попробуйте позже.' },
 });
 
 export const registerLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 час
-  limit: 10, // Не больше 10 регистраций в час с одного IP
+  limit: 100, // Не больше 10 регистраций в час с одного IP
   message: { error: 'Слишком много регистраций. Попробуйте позже.' },
 });
 
