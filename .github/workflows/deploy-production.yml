@@ -18,9 +18,14 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-      
+
+      - name: Debug GITHUB_REF
+        run: echo "GITHUB_REF is ${{ github.ref }}"
+
       - name: Deploy to production server
         uses: appleboy/ssh-action@master
+        env:
+          GITHUB_REF: ${{ github.ref }}
         with:
           host: ${{ vars.HOST }}
           username: ${{ vars.SSH_USERNAME }}
