@@ -27,35 +27,45 @@ const PORT = process.env.PORT || 5001;
 app.use(helmet());
 app.use(hpp());
 
-const allowedOrigins = [
-  'https://xn----dtbbbhdau6cfpgt1e.xn--p1ai',
-  'https://dev.xn----dtbbbhdau6cfpgt1e.xn--p1ai',
-  'https://dev-api.xn----dtbbbhdau6cfpgt1e.xn--p1ai',
-  'https://api.xn----dtbbbhdau6cfpgt1e.xn--p1ai',
-  'http://localhost:8080',
-];
+// const allowedOrigins = [
+//   'https://xn----dtbbbhdau6cfpgt1e.xn--p1ai',
+//   'https://dev.xn----dtbbbhdau6cfpgt1e.xn--p1ai',
+//   'https://dev-api.xn----dtbbbhdau6cfpgt1e.xn--p1ai',
+//   'https://api.xn----dtbbbhdau6cfpgt1e.xn--p1ai',
+//   'http://localhost:8080',
+//   'http://localhost:5173',
+//   'http://localhost:3000',
+//   'http://localhost:8083',
+// ];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // Разрешаем запросы без Origin (например, curl, мобильные приложения)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      } else {
-        return callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: '*',
-  })
-);
+const allowedOrigins = '*';
+
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin) return callback(null, true);
+//       if (allowedOrigins.includes(origin)) {
+//         return callback(null, true);
+//       } else {
+//         return callback(new Error('Not allowed by CORS'));
+//       }
+//     },
+//     credentials: true,
+//     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+//     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+//     exposedHeaders: ['Content-Range', 'X-Content-Range'],
+//     maxAge: 86400 // 24 часа
+//   })
+// );
+
+app.use(cors());
 
 if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
-app.use(express.json({ limit: '10kb' })); // Ограничение 10KB
+
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Запросы с ограничением
 app.use('/auth', authRoutes);

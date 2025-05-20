@@ -7,7 +7,10 @@ import {
   rejectEvent,
   createNews,
   updateNews,
-  deleteNews
+  deleteNews,
+  addFilter,
+  updateFilter,
+  deleteFilter
 } from '../controllers/admin';
 import { authMiddleware } from '../middlewares/auth';
 import { isAdmin } from '../middlewares/roles';
@@ -76,6 +79,30 @@ router.delete(
   authMiddleware as RequestHandler,
   isAdmin as RequestHandler,
   deleteNews as RequestHandler
+);
+
+// Добавление фильтра
+router.post(
+  '/filters',
+  authMiddleware as RequestHandler,
+  isAdmin as RequestHandler,
+  addFilter as RequestHandler
+);
+
+// Обновление фильтра
+router.put(
+  '/filters/:id',
+  authMiddleware as RequestHandler,
+  isAdmin as RequestHandler,
+  updateFilter as RequestHandler
+);
+
+// Удаление фильтра
+router.delete(
+  '/filters/:id',
+  authMiddleware as RequestHandler,
+  isAdmin as RequestHandler,
+  deleteFilter as RequestHandler
 );
 
 export default router;

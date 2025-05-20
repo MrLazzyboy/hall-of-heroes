@@ -6,12 +6,11 @@ export interface User extends Document {
   email: string;
   phone: string;
   password: string;
-  role: 'Player' | 'Admin'; // Основная роль
-  roles: string[]; // Дополнительные роли (например, Master)
+  role: 'Player' | 'Master' | 'Admin';
   createdAt: Date;
   isBlocked: boolean;
   blockUntil: Date | null;
-  events: mongoose.Types.ObjectId[]; // Добавляем поле events
+  events: mongoose.Types.ObjectId[];
   profile: {
     avatarUrl?: string;
     bio?: string;
@@ -27,12 +26,11 @@ const UserSchema = new Schema<User>({
   email: { type: String, required: true, unique: true },
   phone: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: String, enum: ['Player', 'Admin'], default: 'Player' },
-  roles: { type: [String], default: [] }, // Для дополнительных ролей
+  role: { type: String, enum: ['Player', 'Master', 'Admin'], default: 'Player' },
   createdAt: { type: Date, default: Date.now },
   isBlocked: { type: Boolean, default: false },
   blockUntil: { type: Date, default: null },
-  events: [{ type: Schema.Types.ObjectId, ref: 'Event' }], // Добавляем поле events
+  events: [{ type: Schema.Types.ObjectId, ref: 'Event' }],
   profile: {
     avatarUrl: { type: String },
     bio: { type: String },

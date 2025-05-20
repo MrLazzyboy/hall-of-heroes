@@ -5,6 +5,11 @@ import Notification from '../models/notification.ts';
 import { ApiError } from '../middlewares/errorHandler.ts';
 import path from 'path';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export const getCurrentUser = async (
   req: AuthRequest,
@@ -95,20 +100,19 @@ export const uploadAvatar = async (
 ): Promise<void> => {
   try {
     const user = await User.findById(req.user?._id);
-    if (!user) throw new ApiError(404, 'Пользователь не найден 5');
+    if (!user) throw new ApiError(404, 'Пользователь не найден');
 
     if (!req.file) throw new ApiError(400, 'Файл не загружен');
 
-    // Проверяем, существует ли директория для загрузки
-    const uploadDir = path.join(__dirname, '../../uploads');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-
-    user.profile.avatarUrl = `/uploads/${req.file.filename}`;
+    // Обновляем URL аватара в профиле пользователя
+    user.profile.avatarUrl = `/uploads/avatars/${req.file.filename}`;
     await user.save();
 
-    res.status(200).json({ message: 'Аватар обновлен', user });
+    res.status(200).json({ 
+      message: 'Аватар обновлен', 
+      user,
+      avatarUrl: user.profile.avatarUrl 
+    });
   } catch (error) {
     next(error);
   }
