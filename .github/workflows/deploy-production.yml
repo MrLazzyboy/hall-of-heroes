@@ -31,7 +31,8 @@ jobs:
             
             # Обновление кода из репозитория и переключение на тег
             git fetch --all --tags
-            git checkout ${GITHUB_REF#refs/tags/}
+            git checkout ${GITHUB_REF#refs/*/}
+            echo "Checkout version ${GITHUB_REF#refs/*/} at $(date)"
             
             # Установка и сборка бэкенда
             cd apps/backend
